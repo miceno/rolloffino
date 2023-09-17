@@ -276,7 +276,7 @@ void receiveCommand() {
       {
         connecting = true;
         strcpy(value, VERSION_ID);  // Can be seen on host to confirm what is running
-        commandReceived(CMD_CONNECT, value);
+        runCommand(CMD_CONNECT, value);
         //        sendAck(value);
       }
 
@@ -366,7 +366,7 @@ void receiveCommand() {
         // Set the relay associated with the command and send acknowlege to host
         else if (relay > 0)  // Set Relay response
         {
-          commandReceived(command_input, value);
+          runCommand(command_input, value);
         }
 
         // A state request was received
@@ -435,8 +435,7 @@ bool isStopAllowed()
 // value: How to set the relay "ON" or "OFF"
 //
 //
-void commandReceived(int command_input, char* value)
-{
+void runCommand(int command_input, char* value) {
   // Stop
   if (command_input == CMD_STOP) {
 
