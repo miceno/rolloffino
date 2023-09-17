@@ -372,7 +372,7 @@ void receiveCommand() {
         // A state request was received
         else if (sw > 0)  // Get switch response
         {
-          requestReceived(sw);    
+          getStatus(sw);
         }
       }  // end !connecting
     }    // end command parsed
@@ -498,8 +498,7 @@ void runCommand(int command_input, char* value) {
 //
 // sw:     The switch's pin identifier.
 // value   getSwitch will read the pin and set this to "ON" or "OFF"
-void requestReceived(int sw)
-{
+void getStatus(int sw) {
   getSwitch(sw, value);
 
   sendAck(value);  // Send result of reading pin associated with "target"
