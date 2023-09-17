@@ -30,12 +30,12 @@
 # define OPEN_CONTACT HIGH    // Switch definition, Change to LOW if pull-down resistors are used.
 
 // Define name to pin assignments
-#define SWITCH_1 3
-#define SWITCH_2 2
+#define SWITCH_1 2
+#define SWITCH_2 3
 //#define SWITCH_3 A2
 //#define SWITCH_4 A3
 
-#define RELAY_1 8             // Actuator Power GG
+#define RELAY_1 10  // Actuator Power GG
 #define RELAY_2 9  // Direction GG
 #define RELAY_3 7  // Observatory Lights on FUNC_AUX GG
 #define RELAY_4 6  // Safety Blinker GG
