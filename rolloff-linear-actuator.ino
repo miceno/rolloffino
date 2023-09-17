@@ -492,12 +492,14 @@ void check_roof_turn_off_relays() {
     if (MotionStartTime != 0) {
       if ((millis() - MotionStartTime) > ROOF_MOVEMENT_MIN_TIME_MILLIS) {
         if (isSwitchOn(SWITCH_OPENED) || isSwitchOn(SWITCH_CLOSED)) {
+          // Serial.println("Roof is not moving...");
           MotionEndDelay = millis();
         }
       }
     }
   } else {  // Add some delay for complete roof opening or closure
     if ((millis() - MotionEndDelay) > ROOF_MOTION_END_DELAY_MILLIS) {
+          // Serial.println("Stop...");
       stopCommand();
       MotionEndDelay = 0;
     }
