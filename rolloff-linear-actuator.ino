@@ -419,6 +419,37 @@ bool isStopAllowed()
   }
 }
 
+void stopCommand() {
+  digitalWrite(FUNC_ACTIVATION, LOW);
+  digitalWrite(FUNC_DIRECTION, LOW);
+
+  digitalWrite(FUNC_BLINKER, LOW);
+}
+
+void connectCommand() {
+  digitalWrite(FUNC_BLINKER, LOW);
+
+  digitalWrite(FUNC_ACTIVATION, LOW);
+  digitalWrite(FUNC_DIRECTION, LOW);
+}
+
+void openCommand() {
+  digitalWrite(FUNC_BLINKER, HIGH);     // Blink when opening roof
+
+  digitalWrite(FUNC_DIRECTION, LOW);    // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION, HIGH);  // Set actuator in motion
+
+  MotionStartTime = millis();
+}
+
+void closeCommand() {
+  digitalWrite(FUNC_BLINKER, HIGH);     // Blink when closing roof
+
+  digitalWrite(FUNC_DIRECTION, HIGH);   // Set actuator voltage leads to close actuator
+  digitalWrite(FUNC_ACTIVATION, LOW);  // Set actuator in motion
+
+  MotionStartTime = millis();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Action command received
@@ -439,18 +470,14 @@ void runCommand(int command_input, char* value) {
   // Stop
   if (command_input == CMD_STOP) {
 
-    digitalWrite(FUNC_ACTIVATION, LOW);  
-    digitalWrite(FUNC_DIRECTION, LOW);  
-    digitalWrite(FUNC_BLINKER, LOW);  
+    stopCommand();
 
   } else  // Resume Parsing
 
     // Connect
     if (command_input == CMD_CONNECT) {
 
-    digitalWrite(FUNC_ACTIVATION, LOW);  
-    digitalWrite(FUNC_DIRECTION, LOW);  
-    digitalWrite(FUNC_BLINKER, LOW);  
+      connectCommand();
 
     } else  // Resume Parsing
 
@@ -465,23 +492,12 @@ void runCommand(int command_input, char* value) {
         // Open
         if (command_input == CMD_OPEN) {
 
-    digitalWrite(FUNC_BLINKER, HIGH);       // Blink when opening roof
-    digitalWrite(FUNC_DIRECTION, LOW);      // Set actuator voltage leads to open actuator
-    digitalWrite(FUNC_ACTIVATION, HIGH);    // Set actuator in motion
-
-    MotionStartTime = millis();
-      
+          openCommand();
         } else  // Resume Parsing
 
           // Close
           if (command_input == CMD_CLOSE) {
-
-    digitalWrite(FUNC_BLINKER, HIGH);         // Blink when closing roof
-    digitalWrite(FUNC_DIRECTION, HIGH);       // Set actuator voltage leads to close actuator
-    digitalWrite(FUNC_ACTIVATION, HIGH);      // Set actuator in motion
-
-    MotionStartTime = millis();
-      
+            closeCommand();
           }
 
   sendAck(value);  // Send acknowledgement that relay pin associated with "target" was activated to value requested
@@ -519,9 +535,7 @@ void check_roof_turn_off_relays() {
     }
   } else {  // Add some delay for complete roof opening or closure
     if ((millis() - MotionEndDelay) > ROOF_MOTION_END_DELAY_MILLIS) {
-      digitalWrite(FUNC_ACTIVATION, LOW);  
-      digitalWrite(FUNC_DIRECTION, LOW);  
-      digitalWrite(FUNC_BLINKER, LOW);
+      stopCommand();
       MotionEndDelay = 0;
     }
     MotionStartTime = 0;
