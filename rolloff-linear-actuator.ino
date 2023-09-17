@@ -258,8 +258,7 @@ bool parseCommand()  // (command:target:value)
  * negative acknowledgement with message for any errors found.  Dispatch to commandReceived
  * or requestReceived routines to activate the command or get the requested switch state
  */
-void readUSB()
-{
+void receiveCommand() {
   // Confirm there is input available, read and parse it.
   if (Serial && (Serial.available() > 0))
   {
@@ -565,24 +564,23 @@ void setup()
 }
 
 // Wait here for command or switch request from host
-void loop() 
-{   
+void loop() {
 
   check_roof_turn_off_relays();  // GG
 
-  while (Serial.available() <= 0) 
-  {
-    for (int cnt=0; cnt < 60; cnt++)
-    {
-      if (Serial.available() > 0)
+  while (Serial.available() <= 0) {
+    for (int cnt = 0; cnt < 60; cnt++) {
+      if (Serial.available() > 0){
         break;
-      else
+      }
+      else{
         delay(100);
       }
     }
-  readUSB();
+  }
+  receiveCommand();
 
 }  // end loop
 
 
-  
+
