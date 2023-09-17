@@ -119,13 +119,11 @@ const char* ERROR10 = "Abort command ignored, roof already stationary";
 
 const char* VERSION_ID = "V1.2-1";
 
-void sendAck(char* val)
-{
+void sendAck(char* val) {
   char response[MAX_RESPONSE];
   if (strlen(val) > MAX_MESSAGE)
     sendNak(ERROR1);
-  else
-  {  
+  else {
     strcpy(response, "(ACK:");
     strcat(response, target);
     strcat(response, ":");
@@ -136,13 +134,12 @@ void sendAck(char* val)
   }
 }
 
-void sendNak(const char* errorMsg)
-{
+
+void sendNak(const char* errorMsg) {
   char buffer[MAX_RESPONSE];
   if (strlen(errorMsg) > MAX_MESSAGE)
     sendNak(ERROR2);
-  else
-  {
+  else {
     strcpy(buffer, "(NAK:ERROR:");
     strcat(buffer, value);
     strcat(buffer, ":");
@@ -166,12 +163,10 @@ void getSwitch(int id, char* value) {
     strcpy(value, "ON");  // rolloff.ino.standard was ON
 }
 
-bool isSwitchOn(int id)
-{
+bool isSwitchOn(int id) {
   char switch_value[16 + 1];
   getSwitch(id, switch_value);
-  if (strcmp(switch_value, "ON") == 0)
-  {
+  if (strcmp(switch_value, "ON") == 0) {
     return true;
   }
   return false;
@@ -194,26 +189,20 @@ bool parseCommand()  // (command:target:value)
   memset(target, 0, sizeof(target));
   memset(value, 0, sizeof(value));
 
-  while (!eof && (wait < 20))
-  {
-    if (Serial.available() > 0)
-    {
+  while (!eof && (wait < 20)) {
+    if (Serial.available() > 0) {
       Serial.setTimeout(1000);
       recv_count = Serial.readBytes((inpBuf + offset), 1);
-      if (recv_count == 1)
-      {
+      if (recv_count == 1) {
         offset++;
-        if (offset >= MAX_INPUT)
-        {
+        if (offset >= MAX_INPUT) {
           sendNak(ERROR3);
           return false;
         }
-        if (inpBuf[offset-1] == startToken)
-        {
+        if (inpBuf[offset - 1] == startToken) {
           start = true;
         }
-        if (inpBuf[offset-1] == endToken) 
-        {
+        if (inpBuf[offset - 1] == endToken) {
           eof = true;
           inpBuf[offset] = '\0';
         }
@@ -224,8 +213,7 @@ bool parseCommand()  // (command:target:value)
     delay(100);
   }
 
-  if (!start || !eof)
-  {
+  if (!start || !eof) {
     if (!start && !eof)
       sendNak(ERROR4);
     else if (!start)
@@ -233,18 +221,13 @@ bool parseCommand()  // (command:target:value)
     else if (!eof)
       sendNak(ERROR6);
     return false;
-  }
-  else
-  {
+  } else {
     strcpy(command, strtok(inpBuf, "(:"));
     strcpy(target, strtok(NULL, ":"));
     strcpy(value, strtok(NULL, ")"));
-    if ((strlen(command) >= 3) && (strlen(target) >= 1) && (strlen(value) >= 1))
-    {
+    if ((strlen(command) >= 3) && (strlen(target) >= 1) && (strlen(value) >= 1)) {
       return true;
-    }
-    else
-    {  
+    } else {
       sendNak(ERROR7);
       return false;
     }
@@ -260,10 +243,8 @@ bool parseCommand()  // (command:target:value)
  */
 void receiveCommand() {
   // Confirm there is input available, read and parse it.
-  if (Serial && (Serial.available() > 0))
-  {
-    if (parseCommand())
-    {
+  if (Serial && (Serial.available() > 0)) {
+    if (parseCommand()) {
       unsigned long timeNow = millis();
       int hold = 0;
       int relay = -1;  // -1 = not found, 0 = not implemented, pin number = supported
@@ -272,8 +253,7 @@ void receiveCommand() {
       const char* error = ERROR8;
 
       // On initial connection return the version
-      if (strcmp(command, "CON") == 0)
-      {
+      if (strcmp(command, "CON") == 0) {
         connecting = true;
         strcpy(value, VERSION_ID);  // Can be seen on host to confirm what is running
         runCommand(CMD_CONNECT, value);
@@ -282,47 +262,38 @@ void receiveCommand() {
 
       // Map the general input command term to the local action
       // SET: OPEN, CLOSE, ABORT, LOCK, AUXSET
-      else if (strcmp(command, "SET") == 0)
-      {
+      else if (strcmp(command, "SET") == 0) {
         // Prepare to OPEN
-        if (strcmp(target, "OPEN") == 0)                     
-        {
+        if (strcmp(target, "OPEN") == 0) {
           command_input = CMD_OPEN;
           relay = FUNC_ACTIVATION;
           timeMove = timeNow;
         }
         // Prepare to CLOSE
-        else if (strcmp(target, "CLOSE") == 0)    
-        { 
+        else if (strcmp(target, "CLOSE") == 0) {
           command_input = CMD_CLOSE;
           relay = FUNC_ACTIVATION;
           timeMove = timeNow;
         }
         // Prepare to ABORT
-        else if (strcmp(target, "ABORT") == 0)
-        {          
+        else if (strcmp(target, "ABORT") == 0) {
           command_input = CMD_STOP;
 
           // Test whether or not to Abort
-          if (!isStopAllowed())
-          {           
+          if (!isStopAllowed()) {
             error = ERROR10;
-          }
-          else
-          {             
+          } else {
             relay = FUNC_STOP;
           }
         }
         // Prepare for the Lock function
-        else if (strcmp(target, "LOCK") == 0)
-        { 
+        else if (strcmp(target, "LOCK") == 0) {
           command_input = CMD_LOCK;
           relay = FUNC_LOCK;
         }
 
         // Prepare for the Auxiliary function
-        else if (strcmp(target, "AUXSET") == 0)
-        { 
+        else if (strcmp(target, "AUXSET") == 0) {
           command_input = CMD_AUXSET;
           relay = FUNC_AUX;
         }
@@ -330,8 +301,7 @@ void receiveCommand() {
 
       // Handle requests to obtain the status of switches
       // GET: OPENED, CLOSED, LOCKED, AUXSTATE
-      else if (strcmp(command, "GET") == 0)
-      {
+      else if (strcmp(command, "GET") == 0) {
         if (strcmp(target, "OPENED") == 0)
           sw = SWITCH_OPENED;
         else if (strcmp(target, "CLOSED") == 0)
@@ -345,16 +315,13 @@ void receiveCommand() {
       /*
        * See if there was a valid command or request
        */
-      if (!connecting)
-      {
-        if ((relay == -1) && (sw == -1))
-        {
+      if (!connecting) {
+        if ((relay == -1) && (sw == -1)) {
           sendNak(error);  // Unknown input or Abort command was rejected
         }
 
         // Command or Request not implemented
-        else if ((relay == 0 || relay == -1) && (sw == 0 || sw == -1))
-        {
+        else if ((relay == 0 || relay == -1) && (sw == 0 || sw == -1)) {
           strcpy(value, "OFF");  // Request Not implemented
           //sendNak(ERROR9);
           sendAck(value);
@@ -396,22 +363,18 @@ void receiveCommand() {
 // Returning true will cause the Abort request to appear in the commandReceived routine where it will activate
 // the requested relay.
 //
-bool isStopAllowed()
-{
+bool isStopAllowed() {
   unsigned long timeNow = millis();
 
   // If the roof is either fully opened or fully closed, ignore the request.
-  if (isSwitchOn(SWITCH_OPENED) || isSwitchOn(SWITCH_CLOSED)) 
-  {
+  if (isSwitchOn(SWITCH_OPENED) || isSwitchOn(SWITCH_CLOSED)) {
     return false;
   }
 
   // If time since last open or close request is longer than the time for the roof travel return false
-  if ((timeNow - timeMove) >= ROOF_OPEN_MILLI)
-  {
+  if ((timeNow - timeMove) >= ROOF_OPEN_MILLI) {
     return false;
-  }
-  else
+  } else
 
   // Stop will be attempted
   {
@@ -528,7 +491,7 @@ void check_roof_turn_off_relays() {
   if (MotionEndDelay == 0) {
     if (MotionStartTime != 0) {
       if ((millis() - MotionStartTime) > ROOF_MOVEMENT_MIN_TIME_MILLIS) {
-        if( !(!isSwitchOn(SWITCH_OPENED) && !isSwitchOn(SWITCH_CLOSED) ) ) {
+        if (isSwitchOn(SWITCH_OPENED) || isSwitchOn(SWITCH_CLOSED)) {
           MotionEndDelay = millis();
         }
       }
@@ -540,13 +503,11 @@ void check_roof_turn_off_relays() {
     }
     MotionStartTime = 0;
   }
-
 }
 
 
 // One time initialization
-void setup() 
-{
+void setup() {
   // Initialize the input switches
   pinMode(SWITCH_1, INPUT);  // External pullup used GG
   pinMode(SWITCH_2, INPUT);  // External pullup used GG
