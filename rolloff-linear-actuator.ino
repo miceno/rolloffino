@@ -27,7 +27,8 @@
 
 #define BAUD_RATE 38400
 
-# define OPEN_CONTACT HIGH    // Switch definition, Change to LOW if pull-down resistors are used.
+// #define OPEN_CONTACT HIGH  // Switch definition, Change to LOW if pull-down resistors are used.
+#define OPEN_CONTACT LOW   // Switch definition, Change to HIGH if pull-up resistors are used.
 
 // Define name to pin assignments
 #define SWITCH_1 2
@@ -158,12 +159,11 @@ void sendNak(const char* errorMsg)
  * When switch closes The LOW voltage logical 0 is applied to the input pin. GG
  * The off or on value is to be sent to the host in the ACK response
  */
-void getSwitch(int id, char* value)
-{
+void getSwitch(int id, char* value) {
   if (digitalRead(id) == OPEN_CONTACT)
-    strcpy(value, "ON");  // rolloff.ino.standard was OFF
+    strcpy(value, "OFF");  // rolloff.ino.standard was OFF
   else
-    strcpy(value, "OFF"); // rolloff.ino.standard was ON
+    strcpy(value, "ON");  // rolloff.ino.standard was ON
 }
 
 bool isSwitchOn(int id)
