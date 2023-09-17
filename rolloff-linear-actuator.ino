@@ -76,7 +76,7 @@
  * May need to be adjusted
  */
 #define ROOF_MOVEMENT_MIN_TIME_MILLIS 8000
-#define ROOF_MOTION_END_DELAY_MILLIS  8000       
+#define ROOF_MOTION_END_DELAY_MILLIS 2000
 
 // Buffer limits
 #define MAX_INPUT 45
