@@ -28,18 +28,18 @@
 #define BAUD_RATE 38400
 
 // #define OPEN_CONTACT HIGH  // Switch definition, Change to LOW if pull-down resistors are used.
-#define OPEN_CONTACT LOW   // Switch definition, Change to HIGH if pull-up resistors are used.
+#define OPEN_CONTACT LOW  // Switch definition, Change to HIGH if pull-up resistors are used.
 
 // Define name to pin assignments
-#define SWITCH_1 2
-#define SWITCH_2 3
+#define SWITCH_1 3
+#define SWITCH_2 5
 //#define SWITCH_3 A2
 //#define SWITCH_4 A3
 
 #define RELAY_1 10  // Actuator Power GG
-#define RELAY_2 9  // Direction GG
-#define RELAY_3 7  // Observatory Lights on FUNC_AUX GG
-#define RELAY_4 6  // Safety Blinker GG
+#define RELAY_2 9   // Direction GG
+#define RELAY_3 7   // Observatory Lights on FUNC_AUX GG
+#define RELAY_4 6   // Safety Blinker GG
 
 // Indirection to define a functional name in terms of a switch
 // Use 0 if switch not implemented
@@ -121,9 +121,9 @@ const char* VERSION_ID = "V1.2-1";
 
 void sendAck(char* val) {
   char response[MAX_RESPONSE];
-  if (strlen(val) > MAX_MESSAGE)
+  if (strlen(val) > MAX_MESSAGE) {
     sendNak(ERROR1);
-  else {
+  } else {
     strcpy(response, "(ACK:");
     strcat(response, target);
     strcat(response, ":");
@@ -157,10 +157,11 @@ void sendNak(const char* errorMsg) {
  * The off or on value is to be sent to the host in the ACK response
  */
 void getSwitch(int id, char* value) {
-  if (digitalRead(id) == OPEN_CONTACT)
+  if (digitalRead(id) == OPEN_CONTACT) {
     strcpy(value, "OFF");  // rolloff.ino.standard was OFF
-  else
+  } else {
     strcpy(value, "ON");  // rolloff.ino.standard was ON
+  }
 }
 
 bool isSwitchOn(int id) {
@@ -214,12 +215,13 @@ bool parseCommand()  // (command:target:value)
   }
 
   if (!start || !eof) {
-    if (!start && !eof)
+    if (!start && !eof) {
       sendNak(ERROR4);
-    else if (!start)
+    } else if (!start) {
       sendNak(ERROR5);
-    else if (!eof)
+    } else if (!eof) {
       sendNak(ERROR6);
+    }
     return false;
   } else {
     strcpy(command, strtok(inpBuf, "(:"));
@@ -302,14 +304,15 @@ void receiveCommand() {
       // Handle requests to obtain the status of switches
       // GET: OPENED, CLOSED, LOCKED, AUXSTATE
       else if (strcmp(command, "GET") == 0) {
-        if (strcmp(target, "OPENED") == 0)
+        if (strcmp(target, "OPENED") == 0) {
           sw = SWITCH_OPENED;
-        else if (strcmp(target, "CLOSED") == 0)
+        } else if (strcmp(target, "CLOSED") == 0) {
           sw = SWITCH_CLOSED;
-        else if (strcmp(target, "LOCKED") == 0)
+        } else if (strcmp(target, "LOCKED") == 0) {
           sw = SWITCH_LOCKED;
-        else if (strcmp(target, "AUXSTATE") == 0)
+        } else if (strcmp(target, "AUXSTATE") == 0) {
           sw = SWITCH_AUX;
+        }
       }
 
       /*
@@ -397,7 +400,7 @@ void connectCommand() {
 }
 
 void openCommand() {
-  digitalWrite(FUNC_BLINKER, HIGH);     // Blink when opening roof
+  digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
 
   digitalWrite(FUNC_DIRECTION, LOW);    // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION, HIGH);  // Set actuator in motion
@@ -406,9 +409,9 @@ void openCommand() {
 }
 
 void closeCommand() {
-  digitalWrite(FUNC_BLINKER, HIGH);     // Blink when closing roof
+  digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
 
-  digitalWrite(FUNC_DIRECTION, HIGH);   // Set actuator voltage leads to close actuator
+  digitalWrite(FUNC_DIRECTION, HIGH);  // Set actuator voltage leads to close actuator
   digitalWrite(FUNC_ACTIVATION, LOW);  // Set actuator in motion
 
   MotionStartTime = millis();
@@ -447,8 +450,12 @@ void runCommand(int command_input, char* value) {
       // AUX Set
       if (command_input == CMD_AUXSET) {
 
-        if (strncmp(value, "ON", 2)) digitalWrite(FUNC_AUX, LOW);
-        if (strncmp(value, "OFF", 3)) digitalWrite(FUNC_AUX, HIGH);
+        if (strncmp(value, "ON", 2)) {
+          digitalWrite(FUNC_AUX, LOW);
+        }
+        if (strncmp(value, "OFF", 3)) {
+          digitalWrite(FUNC_AUX, HIGH);
+        }
 
       } else  // Resume Parsing
 
@@ -499,7 +506,7 @@ void check_roof_turn_off_relays() {
     }
   } else {  // Add some delay for complete roof opening or closure
     if ((millis() - MotionEndDelay) > ROOF_MOTION_END_DELAY_MILLIS) {
-          // Serial.println("Stop...");
+      // Serial.println("Stop...");
       stopCommand();
       MotionEndDelay = 0;
     }
@@ -513,10 +520,10 @@ void setup() {
   // Initialize the input switches
   pinMode(SWITCH_1, INPUT);  // External pullup used GG
   pinMode(SWITCH_2, INPUT);  // External pullup used GG
-                                    //  pinMode(SWITCH_1, INPUT_PULLUP);
-                                    //  pinMode(SWITCH_2, INPUT_PULLUP);
-                                    //  pinMode(SWITCH_3, INPUT_PULLUP);
-                                    //  pinMode(SWITCH_4, INPUT_PULLUP);
+                             //  pinMode(SWITCH_1, INPUT_PULLUP);
+                             //  pinMode(SWITCH_2, INPUT_PULLUP);
+                             //  pinMode(SWITCH_3, INPUT_PULLUP);
+                             //  pinMode(SWITCH_4, INPUT_PULLUP);
 
   // Initialize the relays
   //Pin Setups
@@ -545,10 +552,9 @@ void loop() {
 
   while (Serial.available() <= 0) {
     for (int cnt = 0; cnt < 60; cnt++) {
-      if (Serial.available() > 0){
+      if (Serial.available() > 0) {
         break;
-      }
-      else{
+      } else {
         delay(100);
       }
     }
@@ -556,6 +562,3 @@ void loop() {
   receiveCommand();
 
 }  // end loop
-
-
-
