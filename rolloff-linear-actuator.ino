@@ -37,7 +37,7 @@
 //#define SWITCH_4 A3
 
 #define RELAY_1 12  // Actuator Power GG
-#define RELAY_2 11   // Direction GG
+#define RELAY_2 11  // Direction GG
 #define RELAY_3 7   // Observatory Lights on FUNC_AUX GG
 #define RELAY_4 6   // Safety Blinker GG
 #define RELAY_5 5   // Enable the motor
@@ -53,9 +53,9 @@
 
 // Indirection to define a functional name in terms of a relay
 // Use 0 if function not supportd
-#define FUNC_ACTIVATION RELAY_1  // Activation relay connected to the direction relay GG
-#define FUNC_DIRECTION RELAY_2   // Direction relay inverts the power for either actuator extension or retraction GG
 #define FUNC_ENABLE MOTOR_ENABLE  // Activation relay connected to the enable (PWM) signal of the motor
+#define FUNC_ACTIVATION RELAY_1   // Activation relay connected to the direction relay GG
+#define FUNC_DIRECTION RELAY_2    // Direction relay inverts the power for either actuator extension or retraction GG
 #define FUNC_STOP MOTOR_ENABLE        // FUNC_STOP (abort) needs only to operate activation relay GG
 #define FUNC_LOCK 0              // If automated roof lock is available.
 #define FUNC_AUX RELAY_3         // Relay to turn ON or OFF observatory lights GG
@@ -513,14 +513,14 @@ void check_roof_turn_off_relays() {
     if (MotionStartTime != 0) {
       if ((millis() - MotionStartTime) > ROOF_MOVEMENT_MIN_TIME_MILLIS) {
         if (isSwitchOn(SWITCH_OPENED) || isSwitchOn(SWITCH_CLOSED)) {
-          // Serial.println("Roof is not moving...");
+          // Serial.println("Roof is not moving..."); // DEBUG
           MotionEndDelay = millis();
         }
       }
     }
   } else {  // Add some delay for complete roof opening or closure
     if ((millis() - MotionEndDelay) > ROOF_MOTION_END_DELAY_MILLIS) {
-      // Serial.println("Stop...");
+      // Serial.println("Stop..."); // DEBUG
       stopCommand();
       MotionEndDelay = 0;
     }
