@@ -40,6 +40,9 @@
 #define RELAY_2 11   // Direction GG
 #define RELAY_3 7   // Observatory Lights on FUNC_AUX GG
 #define RELAY_4 6   // Safety Blinker GG
+#define RELAY_5 5   // Enable the motor
+
+#define MOTOR_ENABLE RELAY_5
 
 // Indirection to define a functional name in terms of a switch
 // Use 0 if switch not implemented
@@ -52,7 +55,8 @@
 // Use 0 if function not supportd
 #define FUNC_ACTIVATION RELAY_1  // Activation relay connected to the direction relay GG
 #define FUNC_DIRECTION RELAY_2   // Direction relay inverts the power for either actuator extension or retraction GG
-#define FUNC_STOP RELAY_1        // FUNC_STOP (abort) needs only to operatre activation relay GG
+#define FUNC_ENABLE MOTOR_ENABLE  // Activation relay connected to the enable (PWM) signal of the motor
+#define FUNC_STOP MOTOR_ENABLE        // FUNC_STOP (abort) needs only to operate activation relay GG
 #define FUNC_LOCK 0              // If automated roof lock is available.
 #define FUNC_AUX RELAY_3         // Relay to turn ON or OFF observatory lights GG
 #define FUNC_BLINKER RELAY_4     // Relay to turn safety  on/off GG
@@ -385,10 +389,18 @@ bool isStopAllowed() {
   }
 }
 
+void motor_off(){
+  digitalWrite(FUNC_ENABLE, LOW);
+}
+
+void motor_on(){
+  digitalWrite(FUNC_ENABLE, HIGH);
+}
+
 void stopCommand() {
   digitalWrite(FUNC_ACTIVATION, LOW);
   digitalWrite(FUNC_DIRECTION, LOW);
-
+  motor_off();                          // Disable the motor
   digitalWrite(FUNC_BLINKER, LOW);
 }
 
@@ -402,6 +414,7 @@ void connectCommand() {
 void openCommand() {
   digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
 
+  motor_on();                           // Activate the motor
   digitalWrite(FUNC_DIRECTION, LOW);    // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION, HIGH);  // Set actuator in motion
 
@@ -411,6 +424,7 @@ void openCommand() {
 void closeCommand() {
   digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
 
+  motor_on();                          // Activate the motor
   digitalWrite(FUNC_DIRECTION, HIGH);  // Set actuator voltage leads to close actuator
   digitalWrite(FUNC_ACTIVATION, LOW);  // Set actuator in motion
 
@@ -531,12 +545,14 @@ void setup() {
   pinMode(RELAY_2, OUTPUT);
   pinMode(RELAY_3, OUTPUT);
   pinMode(RELAY_4, OUTPUT);
+  pinMode(RELAY_5, OUTPUT);
 
   //Turn Off the relays.
   digitalWrite(RELAY_1, LOW);
   digitalWrite(RELAY_2, LOW);
   digitalWrite(RELAY_3, LOW);
   digitalWrite(RELAY_4, LOW);
+  digitalWrite(RELAY_5, LOW);
 
   MotionStartTime = 0;
   MotionEndDelay = 0;
