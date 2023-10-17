@@ -561,6 +561,34 @@ void setup() {
   Serial.begin(BAUD_RATE);  // Baud rate to match that in the driver
 }
 
+
+/*
+Command Format:  (command:target|state:value)
+Response Format: (response:target|state:value)
+
+Command:   
+       CON 	(CON:0:0)              Establish initial connection with Arduino
+       GET	(GET:state:value)      Get state of a switch
+       SET 	(SET:target:value)     Set relay closed or open
+
+           state:   OPENED | CLOSED | LOCKED | AUXSTATE
+           target:  OPEN | CLOSE | ABORT | LOCK | AUXSET
+           value:   ON | OFF | 0 | text-message
+
+Response:  
+       ACK       Success returned from Arduino
+       NAK       Failure returned from Arduino
+
+Examples:        From the Driver      Response From the Arduino
+                 ----------------     --------------------------
+Initial connect (CON:0:0)          >   	
+                                   <  (ACK:0:version) | (NAK:ERROR:message)
+Read a switch   (GET:OPENED:0)     >
+                                   <  (ACK:OPENED:ON|OFF) | (NAK:ERROR:message)
+Set a relay     (SET:CLOSE:ON|OFF) > 
+                                   <  (ACK:CLOSE:ON|OFF) | (NAK:ERROR:message)
+*/
+
 // Wait here for command or switch request from host
 void loop() {
 
