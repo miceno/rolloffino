@@ -23,12 +23,12 @@
 
 #include "Arduino_DebugUtils.h"
 
-#define DEFAULT_LOG_LEVEL DBG_ERROR
+#define DEFAULT_LOG_LEVEL DBG_INFO
 
 void setup_debug() {
   Debug.timestampOn();
   Debug.formatTimestampOn();
-  Debug.newlineOff();
+  Debug.newlineOn();
   Debug.setDebugLevel(DEFAULT_LOG_LEVEL);
 }
 
@@ -54,7 +54,7 @@ int USE_WIFI = 1;
 // using its serial monitor can be helpful to see any diagnostic messages.
 // INIT_DELAY_SECS can be defined to wait a number of seconds after starting the Arduino
 // to have time to get the serial monitor display started and see network startup messages.
-#define INIT_DELAY_SECS 0.2
+#define INIT_DELAY_SECS 0
 
 // For use by the WiFi example
 
@@ -176,7 +176,7 @@ const char* VERSION_ID = "V1.3-esp-2ch-wifi-magnet-2";
 
 void sendAck(char* val) {
   char response[MAX_RESPONSE];
-  DEBUG_VERBOSE("sa:v=%s\n", val);  // DEBUG
+  DEBUG_VERBOSE("sa:v=%s", val);  // DEBUG
   if (strlen(val) > MAX_MESSAGE) {
     strncpy(response, val, MAX_MESSAGE - 3);
     strcpy(&response[MAX_MESSAGE - 3], "...");
@@ -189,7 +189,7 @@ void sendAck(char* val) {
     strcat(response, val);
     strcat(response, ")");
     if (USE_WIFI == 1) {
-      DEBUG_VERBOSE("about to send response: %s\n", response);  // DEBUG
+      DEBUG_VERBOSE("about to send response: %s", response);  // DEBUG
       client.println(response);
       client.flush();
     } else {
@@ -234,7 +234,7 @@ void getSwitch(int id, char* value) {
     strcpy(value, "OFF");
   else
     strcpy(value, "ON");
-  DEBUG_DEBUG("gs:id=%d,v=%s\n", id, value);  // DEBUG
+  DEBUG_DEBUG("gs:id=%d,v=%s", id, value);  // DEBUG
 }
 
 bool isSwitchOn(int id) {
@@ -251,7 +251,7 @@ int read_data(char* inpBuf, int offset) {
   if (USE_WIFI == 1) {
     if (client.available() > 0) {
       recv_count = client.read((unsigned char*)inpBuf + offset, 1);
-      DEBUG_VERBOSE("Reading data: %d '%s'\n", recv_count, inpBuf);  // DEBUG
+      DEBUG_VERBOSE("Reading data: %d '%s'", recv_count, inpBuf);  // DEBUG
     } else {
       DEBUG_WARNING("read data no data available");  // DEBUG
     }
@@ -299,7 +299,7 @@ bool parseCommand()  // (command:target:value)
       continue;
     }
   }
-  DEBUG_DEBUG("command=%s\n", inpBuf);  // DEBUG
+  DEBUG_DEBUG("command=%s", inpBuf);  // DEBUG
   wait++;
   delay(100);
 
@@ -316,7 +316,7 @@ bool parseCommand()  // (command:target:value)
     strcpy(command, strtok(inpBuf, "(:"));
     strcpy(target, strtok(NULL, ":"));
     strcpy(value, strtok(NULL, ")"));
-    DEBUG_DEBUG("cmd=%s, t=%s, v=%s\n", command, target, value);  // DEBUG
+    DEBUG_DEBUG("cmd=%s, t=%s, v=%s", command, target, value);  // DEBUG
     if ((strlen(command) >= 3) && (strlen(target) >= 1) && (strlen(value) >= 1)) {
       return true;
     } else {
@@ -351,7 +351,7 @@ bool is_data_available() {
 void receiveCommand() {
   // Confirm there is input available, read and parse it.
   if (is_data_available()) {
-    DEBUG_DEBUG("Data is available\n");  // DEBUG
+    DEBUG_DEBUG("Data is available");  // DEBUG
     if (parseCommand()) {
       unsigned long timeNow = millis();
       int relay = -1;  // -1 = not found, 0 = not implemented, pin number = supported
@@ -578,7 +578,7 @@ void closeCommand() {
 //
 //
 void runCommand(int command_input, char* value) {
-  DEBUG_DEBUG("runCommand %d, %s\n", command_input, value); // DEBUG
+  DEBUG_DEBUG("runCommand %d, %s", command_input, value); // DEBUG
 
   // Stop
   if (command_input == CMD_STOP) {
@@ -654,18 +654,12 @@ void connectWifi() {
 }
 
 void printWifiStatus() {
-  Debug.timestampOff();
-  Debug.newlineOn();
-
   String ssid = WiFi.SSID();
   uint8_t rssi = WiFi.RSSI();
   IPAddress ip = WiFi.localIP();
   
   // print the SSID of the network you're attached to:
   DEBUG_INFO("\nSSID: %s, IP Address: %s, Signal (RSSI): %d dBm", ssid.c_str(), ip.toString().c_str(), rssi);
-
-  Debug.timestampOn();
-  Debug.newlineOff();
 }
 
 // Check if roof has fully opened or fully closed and turn off relay if so! GG
@@ -762,7 +756,7 @@ void setup_wifi() {
   bool res;
   // res = wm.autoConnect(); // auto generated AP name from chipid
   // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
-  res = wm.autoConnect("AutoConnectAP", "password");  // password protected ap
+  res = wm.autoConnect("AutoConnectAP", "astroberry");  // password protected ap
 
   if (!res) {
     DEBUG_ERROR("Failed to connect");
@@ -806,7 +800,7 @@ void wifi_loop() {
   // Check still connected to the wifi network
   DEBUG_VERBOSE("wifi loop");  // DEBUG
   int wifi_status = WiFi.status();
-  DEBUG_VERBOSE("wifi status: %d\n", wifi_status);  // DEBUG
+  DEBUG_VERBOSE("wifi status: %d", wifi_status);  // DEBUG
   if (wifi_status != WL_CONNECTED) {
     DEBUG_VERBOSE("reconnecting...");  // DEBUG
     reconnectWifi();
