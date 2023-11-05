@@ -9,7 +9,7 @@
  * tg November 2021 Break out commandReceived and requestReceived to make alernate actions more
  *                  obvious/accessible, Remove Due specific code.
  * gg September 2022 Modifications to control a linear actuator based roof
- * or September 2023 Refactor for modularity
+ * or September 2023 Refactor for modularity, for ESP8266 and TCP connection, based on rolloffino.ino.wifi
  *
  * tg: Tom Gibson
  * gg: Gilles Gagnon
@@ -800,6 +800,9 @@ void wifi_loop() {
     reconnectWifi();
   }
 
+  if (!client) {
+    client = server.available();
+  }
   if (client.connected()) {
     // Serial.println("client.connected"); // DEBUG
     if (!indiConnected) {
@@ -811,28 +814,24 @@ void wifi_loop() {
     // Serial.println("NOT client.connected"); // DEBUG
     if (indiConnected) {
       indiConnected = false;
-      if (client)
-        client.stop();
       Serial.println("rolloffino driver disconnected");
     }
   }
   // Serial.println("after client.connected checks"); // DEBUG
 
   // Wait for incoming data from the INDI driver
-  for (int cnt = 0; cnt < 30; cnt++) {
-    if ((client = server.available())) {
-      // Serial.println("available data..."); // DEBUG
-      if (!indiData) {
-        client.flush();
-        indiData = true;
-      }
-      if (client.available() > 0)
-        receiveCommand();
-      break;
-    } else {
-      // Serial.println("No data available. Sleeping..."); // DEBUG
-      delay(1000);
+  if (client) {
+    if (!indiData) {
+      client.flush();
+      indiData = true;
     }
+    // Serial.println("available data..."); // DEBUG
+    if (client.available() > 0) {
+      receiveCommand();
+    }
+  } else {
+    // Serial.println("No data available. Sleeping..."); // DEBUG
+    delay(100);
   }
 }
 
