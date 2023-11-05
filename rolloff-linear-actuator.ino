@@ -176,7 +176,7 @@ const char* VERSION_ID = "V1.3-esp-2ch-wifi-magnet-2";
 
 void sendAck(char* val) {
   char response[MAX_RESPONSE];
-  DEBUG_VERBOSE("sa:v=%s", val);  // DEBUG
+  DEBUG_INFO("ACK=%s", val);  // DEBUG
   if (strlen(val) > MAX_MESSAGE) {
     strncpy(response, val, MAX_MESSAGE - 3);
     strcpy(&response[MAX_MESSAGE - 3], "...");
@@ -201,6 +201,7 @@ void sendAck(char* val) {
 
 void sendNak(const char* errorMsg) {
   char buffer[MAX_RESPONSE];
+  DEBUG_INFO("ACK=%s", errorMsg);  // DEBUG
   if (strlen(errorMsg) > MAX_MESSAGE) {
     strncpy(buffer, errorMsg, MAX_MESSAGE - 3);
     strcpy(&buffer[MAX_MESSAGE - 3], "...");
@@ -299,7 +300,7 @@ bool parseCommand()  // (command:target:value)
       continue;
     }
   }
-  DEBUG_DEBUG("command=%s", inpBuf);  // DEBUG
+  DEBUG_INFO("Received command=%s", inpBuf);  // DEBUG
   wait++;
   delay(100);
 
