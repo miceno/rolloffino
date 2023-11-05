@@ -21,6 +21,16 @@
 #include <ESP8266WiFi.h>
 #include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager
 
+#include "Arduino_DebugUtils.h"
+
+#define DEFAULT_LOG_LEVEL DBG_ERROR
+
+void setup_debug() {
+  Debug.timestampOn();
+  Debug.formatTimestampOn();
+  Debug.newlineOff();
+  Debug.setDebugLevel(DEFAULT_LOG_LEVEL);
+}
 
 /*
  * This version of the rolloff.ino has been modified to work with linear actuators that turn
@@ -169,6 +179,7 @@ const char* VERSION_ID = "V1.3-esp-2ch-wifi-magnet-2";
 
 void sendAck(char* val) {
   char response[MAX_RESPONSE];
+  DEBUG_VERBOSE("sa:v=%s\n", val);  // DEBUG
   if (strlen(val) > MAX_MESSAGE) {
     strncpy(response, val, MAX_MESSAGE - 3);
     strcpy(&response[MAX_MESSAGE - 3], "...");
@@ -181,6 +192,7 @@ void sendAck(char* val) {
     strcat(response, val);
     strcat(response, ")");
     if (USE_WIFI == 1) {
+      DEBUG_VERBOSE("about to send response: %s\n", response);  // DEBUG
       client.println(response);
       client.flush();
     } else {
@@ -225,6 +237,7 @@ void getSwitch(int id, char* value) {
     strcpy(value, "OFF");
   else
     strcpy(value, "ON");
+  DEBUG_DEBUG("gs:id=%d,v=%s\n", id, value);  // DEBUG
 }
 
 bool isSwitchOn(int id) {
@@ -241,9 +254,9 @@ int read_data(char* inpBuf, int offset) {
   if (USE_WIFI == 1) {
     if (client.available() > 0) {
       recv_count = client.read((unsigned char*)inpBuf + offset, 1);
-      // Serial.printf("Reading data: %d '%s'\n", recv_count, inpBuf); // DEBUG
+      DEBUG_VERBOSE("Reading data: %d '%s'\n", recv_count, inpBuf);  // DEBUG
     } else {
-      // Serial.println("read data no data available"); // DEBUG
+      DEBUG_WARNING("read data no data available");  // DEBUG
     }
   } else {
     if (Serial.available() > 0) {
@@ -289,7 +302,7 @@ bool parseCommand()  // (command:target:value)
       continue;
     }
   }
-  // Serial.printf("command=%s\n", inpBuf); // DEBUG
+  DEBUG_DEBUG("command=%s\n", inpBuf);  // DEBUG
   wait++;
   delay(100);
 
@@ -306,7 +319,7 @@ bool parseCommand()  // (command:target:value)
     strcpy(command, strtok(inpBuf, "(:"));
     strcpy(target, strtok(NULL, ":"));
     strcpy(value, strtok(NULL, ")"));
-    // Serial.printf("cmd=%s, t=%s, v=%s\n", command, target, value); // DEBUG
+    DEBUG_DEBUG("cmd=%s, t=%s, v=%s\n", command, target, value);  // DEBUG
     if ((strlen(command) >= 3) && (strlen(target) >= 1) && (strlen(value) >= 1)) {
       return true;
     } else {
@@ -341,7 +354,7 @@ bool is_data_available() {
 void receiveCommand() {
   // Confirm there is input available, read and parse it.
   if (is_data_available()) {
-    // Serial.println("Data is available"); // DEBUG
+    DEBUG_DEBUG("Data is available\n");  // DEBUG
     if (parseCommand()) {
       unsigned long timeNow = millis();
       int relay = -1;  // -1 = not found, 0 = not implemented, pin number = supported
@@ -421,7 +434,8 @@ void receiveCommand() {
 
         // Command or Request not implemented
         else if ((relay == 0 || relay == -1) && (sw == 0 || sw == -1)) {
-          strcpy(value, "OFF");  // Request Not implemented
+          DEBUG_ERROR("Command or request not implemented");  // DEBUG
+          strcpy(value, "OFF");                          // Request Not implemented
           //sendNak(ERROR9);
           sendAck(value);
         }
@@ -438,14 +452,14 @@ void receiveCommand() {
         // A state request was received
         else if (sw > 0)  // Get switch response
         {
-          // Serial.println("about to get Status"); // DEBUG
+          DEBUG_VERBOSE("about to get Status");  // DEBUG
           getStatus(sw);
         }
       }  // end !connecting
     }    // end command parsed
   }      // end input found
   else {
-    // Serial.println("No data available. Continue..."); // DEBUG
+    DEBUG_WARNING("No data available. Continue...");  // DEBUG
   }
 }
 
@@ -567,7 +581,7 @@ void closeCommand() {
 //
 //
 void runCommand(int command_input, char* value) {
-  // Serial.printf("runCommand %d, %s\n", command_input, value); // DEBUG
+  DEBUG_DEBUG("runCommand %d, %s\n", command_input, value); // DEBUG
 
   // Stop
   if (command_input == CMD_STOP) {
@@ -628,41 +642,33 @@ void getStatus(int sw) {
 void connectWifi() {
   // Connect to the WiFi network:
   while (WiFi.status() != WL_CONNECTED) {
-    Serial.print("Attempting to connect to the network ");
-    Serial.println(ssid);
-    // Connect to WPA/WPA2 network. Change if using open or WEP network:
-    WiFi.begin(ssid, pass);
+    DEBUG_INFO("Attempting to connect to the network ");
 
     // wait up to 20 seconds to establish the connection
     for (int i = 0; i < 20; i++) {
       delay(1000);
       if (WiFi.status() == WL_CONNECTED)
         return;
+      DEBUG_INFO(".");
     }
-    Serial.print("Failed to connect to the network ");
-    Serial.println(ssid);
-    Serial.println("Unable to continue without a WiFi network");
+    DEBUG_INFO("Failed to connect to the current configured network.\n" 
+               "Unable to continue without a WiFi network.");
   }
 }
 
 void printWifiStatus() {
-  // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+  Debug.timestampOff();
+  Debug.newlineOn();
 
-  // print your board's IP address:
+  String ssid = WiFi.SSID();
+  uint8_t rssi = WiFi.RSSI();
   IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+  
+  // print the SSID of the network you're attached to:
+  DEBUG_INFO("\nSSID: %s, IP Address: %s, Signal (RSSI): %d dBm", ssid.c_str(), ip.toString().c_str(), rssi);
 
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
-
-  Serial.println("");
-  Serial.println("Network online, ready for rolloffino driver connections.");
+  Debug.timestampOn();
+  Debug.newlineOff();
 }
 
 // Check if roof has fully opened or fully closed and turn off relay if so! GG
@@ -673,14 +679,14 @@ void check_roof_turn_off_relays() {
     if (MotionStartTime != 0) {
       if ((millis() - MotionStartTime) > ROOF_MOVEMENT_MIN_TIME_MILLIS) {
         if (isSwitchOn(SWITCH_OPENED) || isSwitchOn(SWITCH_CLOSED)) {
-          // Serial.println("Roof is not moving..."); // DEBUG
+          DEBUG_DEBUG("Roof is not moving...");  // DEBUG
           MotionEndDelay = millis();
         }
       }
     }
   } else {  // Add some delay for complete roof opening or closure
     if ((millis() - MotionEndDelay) > ROOF_MOTION_END_DELAY_MILLIS) {
-      // Serial.println("Stop..."); // DEBUG
+      DEBUG_DEBUG("Stop...");  // DEBUG
       stopCommand();
       MotionEndDelay = 0;
     }
@@ -714,6 +720,7 @@ void setup() {
   pinMode(RELAY_11, OUTPUT);
   pinMode(RELAY_12, OUTPUT);
 
+  setup_debug();
 
   // Establish USB port.
   setup_serial();
@@ -761,12 +768,14 @@ void setup_wifi() {
   res = wm.autoConnect("AutoConnectAP", "password");  // password protected ap
 
   if (!res) {
-    Serial.println("Failed to connect");
+    DEBUG_ERROR("Failed to connect");
     // ESP.restart();
   } else {
     //if you get here you have connected to the WiFi
-    Serial.println("connected...yeey :)");
+    DEBUG_INFO("connected...yeey :)");
   }
+  printWifiStatus();
+  DEBUG_INFO("Network online, ready for rolloffino driver connections.");
 }
 
 
@@ -776,18 +785,20 @@ void setup_wifi() {
  */
 
 boolean indiConnected = false;  // Driver has connected to local network
-boolean indiData = false;       // Driver has made initial contact
+// boolean indiData = false;       // Driver has made initial contact
 
 void reconnectWifi() {
-  // Serial.println("not connected"); // DEBUG
-  if (indiConnected || indiData)
-    Serial.println("Lost the WiFi connection");
+  DEBUG_VERBOSE("not connected");  // DEBUG
+  // if (indiConnected || indiData)
+  if (indiConnected) {
+    DEBUG_INFO("Lost the WiFi connection");
+  }
   indiConnected = false;
   if (client) {
     client.stop();
   }
   WiFi.disconnect();
-  WiFi.config(ip, gw, subnet);  //Use a fixed WiFi address for the Arduino
+  WiFi.config(ip, gw, subnet);  // Use a fixed WiFi address for the Arduino
   connectWifi();
   server.begin();  // Start listening
   printWifiStatus();
@@ -796,11 +807,11 @@ void reconnectWifi() {
 
 void wifi_loop() {
   // Check still connected to the wifi network
-  // Serial.println("wifi loop"); // DEBUG
+  DEBUG_VERBOSE("wifi loop");  // DEBUG
   int wifi_status = WiFi.status();
-  // Serial.printf("wifi status: %d\n", wifi_status); // DEBUG
+  DEBUG_VERBOSE("wifi status: %d\n", wifi_status);  // DEBUG
   if (wifi_status != WL_CONNECTED) {
-    // Serial.println("reconnecting..."); // DEBUG
+    DEBUG_VERBOSE("reconnecting...");  // DEBUG
     reconnectWifi();
   }
 
@@ -808,33 +819,36 @@ void wifi_loop() {
     client = server.available();
   }
   if (client.connected()) {
-    // Serial.println("client.connected"); // DEBUG
+    DEBUG_VERBOSE("client.connected");  // DEBUG
     if (!indiConnected) {
       indiConnected = true;
-      indiData = false;
-      Serial.println("rolloffino driver connected");
+      // indiData = false;
+      DEBUG_INFO("rolloffino driver connected");
     }
   } else {
-    // Serial.println("NOT client.connected");  // DEBUG
+    DEBUG_VERBOSE("NOT client.connected");  // DEBUG
     if (indiConnected) {
       indiConnected = false;
-      Serial.println("rolloffino driver disconnected");
+      DEBUG_INFO("rolloffino driver disconnected");
     }
   }
-  // Serial.println("after client.connected checks"); // DEBUG
+  DEBUG_VERBOSE("after client.connected checks");  // DEBUG
 
   // Wait for incoming data from the INDI driver
   if (client) {
+    client.flush();
+    /*
     if (!indiData) {
       client.flush();
       indiData = true;
     }
-    // Serial.println("available data..."); // DEBUG
+    */
+    DEBUG_VERBOSE("available data...");  // DEBUG
     if (client.available() > 0) {
       receiveCommand();
     }
   } else {
-    // Serial.println("No data available. Sleeping..."); // DEBUG
+    DEBUG_VERBOSE("No data available. Sleeping...");  // DEBUG
     delay(100);
   }
 }
