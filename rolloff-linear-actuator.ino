@@ -131,9 +131,6 @@ int USE_WIFI = 1;
 #define SUBNET_ADDR 255, 255, 255, 0   // Subnet address
 #define INTERNET_PORT 8888             // Listen on telnet port, match in INDI driver tab \
 
-char ssid[] = "SECRET_SSID";           // your network SSID (name)
-char pass[] = "SECRET_PASS";           // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;                      // your network key index number (needed only for WEP)
 IPAddress ip(INTERNET_ADDR);           // AP local Internet address
 IPAddress gw(GATEWAY_ADDR);            // AP gateway address
 IPAddress subnet(SUBNET_ADDR);         // AP subnet address
@@ -217,7 +214,7 @@ void sendNak(const char* errorMsg) {
     strcat(buffer, ")");
     if (USE_WIFI == 1) {
       client.println(buffer);
-      client.flush();
+      // client.flush();
     } else {
       Serial.println(buffer);
       Serial.flush();
