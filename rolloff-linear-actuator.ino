@@ -96,9 +96,9 @@ int USE_WIFI = 1;
 #define FUNC_DIRECTION_A RELAY_2    // Direction relay inverts the power for either actuator extension or retraction GG
 #define FUNC_ACTIVATION_B RELAY_10  // Activation relay connected to the direction relay GG
 #define FUNC_DIRECTION_B RELAY_11   // Direction relay inverts the power for either actuator extension or retraction GG
-// #define FUNC_LOCK 1              // If automated roof lock is available.
-// #define FUNC_AUX 1          // Relay to turn ON or OFF observatory lights GG
-// #define FUNC_BLINKER 0     // Relay to turn safety  on/off GG
+#define FUNC_LOCK 0              // If automated roof lock is available.
+#define FUNC_AUX 0          // Relay to turn ON or OFF observatory lights GG
+#define FUNC_BLINKER 0     // Relay to turn safety  on/off GG
 
 /*
  * Abort (stop) request is only meaningful if roof is in motion.
@@ -394,7 +394,6 @@ void receiveCommand() {
           }
         }
         // Prepare for the Lock function
-        /*
         else if (strcmp(target, "LOCK") == 0) {
           command_input = CMD_LOCK;
           relay = FUNC_LOCK;
@@ -405,7 +404,6 @@ void receiveCommand() {
           command_input = CMD_AUXSET;
           relay = FUNC_AUX;
         }
-        */
       }
 
       // Handle requests to obtain the status of switches
