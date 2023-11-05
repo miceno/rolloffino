@@ -839,7 +839,7 @@ void wifi_loop() {
     }
   } else {
     DEBUG_VERBOSE("No data available. Sleeping...");  // DEBUG
-    delay(100);
+    delay(10);
   }
 }
 
