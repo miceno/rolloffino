@@ -714,8 +714,6 @@ void setup() {
   pinMode(RELAY_11, OUTPUT);
   pinMode(RELAY_12, OUTPUT);
 
-  // Turn Off the relays.
-  motor_off();
 
   // Establish USB port.
   setup_serial();
@@ -723,6 +721,11 @@ void setup() {
   if (USE_WIFI == 1) {
     setup_wifi();
   }
+
+  // Turn Off the relays.
+  motor_off();
+
+  // Start server
   server.begin();
 }
 
