@@ -44,7 +44,7 @@ int USE_WIFI = 1;
 // using its serial monitor can be helpful to see any diagnostic messages.
 // INIT_DELAY_SECS can be defined to wait a number of seconds after starting the Arduino
 // to have time to get the serial monitor display started and see network startup messages.
-#define INIT_DELAY_SECS 0
+#define INIT_DELAY_SECS 0.2
 
 // For use by the WiFi example
 
@@ -52,8 +52,8 @@ int USE_WIFI = 1;
 // #define OPEN_CONTACT LOW  // Switch definition, Change to HIGH if pull-up resistors are used.
 
 // Define name to pin assignments
-#define SWITCH_1 5 // D1
-#define SWITCH_2 4 // D2
+#define SWITCH_1 5  // D1
+#define SWITCH_2 4  // D2
 //#define SWITCH_3 A2
 //#define SWITCH_4 A3
 
@@ -116,19 +116,19 @@ int USE_WIFI = 1;
 #define MAX_RESPONSE 127
 #define MAX_MESSAGE 63
 
-#define INTERNET_ADDR 192, 168, 1, 227  // Manual setup of IP address
-#define GATEWAY_ADDR 192, 168, 1, 1     // Gateway address
-#define SUBNET_ADDR 255, 255, 255, 0    // Subnet address
-#define INTERNET_PORT 8888              // Listen on telnet port, match in INDI driver tab \
+#define INTERNET_ADDR 192, 168, 1, 61  // Manual setup of IP address
+#define GATEWAY_ADDR 192, 168, 1, 1    // Gateway address
+#define SUBNET_ADDR 255, 255, 255, 0   // Subnet address
+#define INTERNET_PORT 8888             // Listen on telnet port, match in INDI driver tab \
 
-char ssid[] = "SECRET_SSID";            // your network SSID (name)
-char pass[] = "SECRET_PASS";            // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;                       // your network key index number (needed only for WEP)
-IPAddress ip(INTERNET_ADDR);            // AP local Internet address
-IPAddress gw(GATEWAY_ADDR);             // AP gateway address
-IPAddress subnet(SUBNET_ADDR);          // AP subnet address
-WiFiServer server(INTERNET_PORT);       // Arduino server listening for connections on port specified
-WiFiClient client;                      // Connection to return data back to the indi driver
+char ssid[] = "SECRET_SSID";           // your network SSID (name)
+char pass[] = "SECRET_PASS";           // your network password (use for WPA, or use as key for WEP)
+int keyIndex = 0;                      // your network key index number (needed only for WEP)
+IPAddress ip(INTERNET_ADDR);           // AP local Internet address
+IPAddress gw(GATEWAY_ADDR);            // AP gateway address
+IPAddress subnet(SUBNET_ADDR);         // AP subnet address
+WiFiServer server(INTERNET_PORT);      // Arduino server listening for connections on port specified
+WiFiClient client;                     // Connection to return data back to the indi driver
 
 enum cmd_input {
   CMD_NONE,
@@ -728,7 +728,8 @@ void setup() {
 
 void setup_serial() {
   Serial.begin(BAUD_RATE);  // Baud rate to match that in the driver
-  while (!Serial);
+  while (!Serial)
+    ;
 }
 
 void setup_wifi() {
@@ -811,7 +812,7 @@ void wifi_loop() {
       Serial.println("rolloffino driver connected");
     }
   } else {
-    // Serial.println("NOT client.connected"); // DEBUG
+    // Serial.println("NOT client.connected");  // DEBUG
     if (indiConnected) {
       indiConnected = false;
       Serial.println("rolloffino driver disconnected");
