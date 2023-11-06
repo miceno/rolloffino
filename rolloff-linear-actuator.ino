@@ -172,7 +172,7 @@ const char* ERROR8 = "Command must map to either set a relay or get a switch";
 const char* ERROR9 = "Request not implemented in controller";
 const char* ERROR10 = "Abort command ignored, roof already stationary";
 
-const char* VERSION_ID = "V1.3-esp-2ch-wifi-magnet-2";
+const char* VERSION_ID = "V1.3-esp-2ch-wifi-magnet-3";
 
 void sendAck(char* val) {
   char response[MAX_RESPONSE];
