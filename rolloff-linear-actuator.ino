@@ -118,8 +118,8 @@ int USE_WIFI = 1;
  *                  2) before turning the power off, after the limit switches are activated
  * May need to be adjusted
  */
-#define ROOF_MOVEMENT_MIN_TIME_MILLIS 8000
-#define ROOF_MOTION_END_DELAY_MILLIS 2000
+#define ROOF_MOVEMENT_MIN_TIME_MILLIS 20000
+#define ROOF_MOTION_END_DELAY_MILLIS 5000
 
 // Buffer limits
 #define MAX_INPUT 45
