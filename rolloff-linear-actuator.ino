@@ -299,10 +299,10 @@ bool parseCommand()  // (command:target:value)
       }
       continue;
     }
+    wait++;
+    delay(100);
   }
   DEBUG_INFO("Received command=%s", inpBuf);  // DEBUG
-  wait++;
-  delay(100);
 
   if (!start || !eof) {
     if (!start && !eof) {
