@@ -252,9 +252,9 @@ int read_data(char* inpBuf, int offset) {
   if (USE_WIFI == 1) {
     if (client.available() > 0) {
       recv_count = client.read((unsigned char*)inpBuf + offset, 1);
-      DEBUG_VERBOSE("Reading data: %d '%s'", recv_count, inpBuf);  // DEBUG
+      DEBUG_DEBUG("Reading data: %d '%s'", recv_count, inpBuf);  // DEBUG
     } else {
-      DEBUG_WARNING("read data no data available");  // DEBUG
+      DEBUG_VERBOSE("read data no data available");  // DEBUG
     }
   } else {
     if (Serial.available() > 0) {
@@ -317,7 +317,7 @@ bool parseCommand()  // (command:target:value)
     strcpy(command, strtok(inpBuf, "(:"));
     strcpy(target, strtok(NULL, ":"));
     strcpy(value, strtok(NULL, ")"));
-    DEBUG_DEBUG("cmd=%s, t=%s, v=%s", command, target, value);  // DEBUG
+    DEBUG_INFO("cmd=%s, t=%s, v=%s", command, target, value);  // DEBUG
     if ((strlen(command) >= 3) && (strlen(target) >= 1) && (strlen(value) >= 1)) {
       return true;
     } else {
@@ -352,7 +352,7 @@ bool is_data_available() {
 void receiveCommand() {
   // Confirm there is input available, read and parse it.
   if (is_data_available()) {
-    DEBUG_DEBUG("Data is available");  // DEBUG
+    DEBUG_VERBOSE("Data is available");  // DEBUG
     if (parseCommand()) {
       unsigned long timeNow = millis();
       int relay = -1;  // -1 = not found, 0 = not implemented, pin number = supported
@@ -455,7 +455,7 @@ void receiveCommand() {
     }    // end command parsed
   }      // end input found
   else {
-    DEBUG_WARNING("No data available. Continue...");  // DEBUG
+    DEBUG_VERBOSE("No data available. Continue...");  // DEBUG
   }
 }
 
@@ -654,7 +654,7 @@ void connectWifi() {
 
 void printWifiStatus() {
   String ssid = WiFi.SSID();
-  uint8_t rssi = WiFi.RSSI();
+  int8_t rssi = WiFi.RSSI();
   IPAddress ip = WiFi.localIP();
   
   // print the SSID of the network you're attached to:
