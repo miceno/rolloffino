@@ -201,7 +201,7 @@ void sendAck(char* val) {
 
 void sendNak(const char* errorMsg) {
   char buffer[MAX_RESPONSE];
-  DEBUG_INFO("ACK=%s", errorMsg);  // DEBUG
+  DEBUG_INFO("NACK=%s", errorMsg);  // DEBUG
   if (strlen(errorMsg) > MAX_MESSAGE) {
     strncpy(buffer, errorMsg, MAX_MESSAGE - 3);
     strcpy(&buffer[MAX_MESSAGE - 3], "...");
