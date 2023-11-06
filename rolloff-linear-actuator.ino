@@ -265,6 +265,16 @@ int read_data(char* inpBuf, int offset) {
   return recv_count;
 }
 
+char *safeStrTok(char *input, const char *delimiter, char *output){
+char *pointer = NULL;
+  pointer = strtok(input, delimiter);
+  if(pointer)
+    strcpy(output, pointer);
+  else
+    output[0] = '\0';
+  return pointer;
+}
+
 bool parseCommand()  // (command:target:value)
 {
   bool start = false;
@@ -314,11 +324,11 @@ bool parseCommand()  // (command:target:value)
     }
     return false;
   } else {
-    strcpy(command, strtok(inpBuf, "(:"));
-    strcpy(target, strtok(NULL, ":"));
-    strcpy(value, strtok(NULL, ")"));
-    DEBUG_INFO("cmd=%s, t=%s, v=%s", command, target, value);  // DEBUG
+    safeStrTok(inpBuf, "(:", command);
+    safeStrTok(NULL, ":", target);
+    safeStrTok(NULL, ")", value);
     if ((strlen(command) >= 3) && (strlen(target) >= 1) && (strlen(value) >= 1)) {
+      DEBUG_INFO("cmd=%s, t=%s, v=%s", command, target, value);  // DEBUG
       return true;
     } else {
       sendNak(ERROR7);
