@@ -244,7 +244,7 @@ void getSwitch(int id, char* value) {
     strcpy(value, "OFF");
   else
     strcpy(value, "ON");
-  DEBUG_DEBUG("gs:id=%d,v=%s", id, value);  // DEBUG
+  DEBUG_VERBOSE("gs:id=%d,v=%s", id, value);  // DEBUG
 }
 
 bool isSwitchOn(int id) {
