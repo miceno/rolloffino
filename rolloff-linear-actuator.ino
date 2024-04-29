@@ -605,10 +605,10 @@ void runCommand(int command_input, char* value) {
   DEBUG_DEBUG("runCommand %d, %s", command_input, value); // DEBUG
 
   switch (command_input) {
-  CMD_STOP: 
+  case CMD_STOP: 
     stopCommand();
     break;
-  CMD_CONNECT:
+  case CMD_CONNECT:
     connectCommand();
     break;
   /*
@@ -623,10 +623,10 @@ void runCommand(int command_input, char* value) {
     }
   } else
   */
-  CMD_OPEN:
+  case CMD_OPEN:
     openCommand();
     break;
-  CMD_CLOSE:
+  case CMD_CLOSE:
     closeCommand();
     break;
   } // switch
