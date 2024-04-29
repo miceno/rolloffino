@@ -83,3 +83,10 @@ Commands are one per line, delimited by parenthesis, like:
 ```
 (CON:0:0)
 ```
+
+# nc 
+
+You can also use `nc` to send commands. You will need to remove end-of-line delimiter and wait for the response, like this:
+```
+(echo -n "(CON:0:0)" && sleep 1 && echo -n "(SET:OPEN:0)" && sleep 1) | nc 192.168.1.46 8888
+```
