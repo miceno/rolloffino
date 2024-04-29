@@ -849,7 +849,6 @@ void wifi_loop() {
     }
   } else {
     DEBUG_VERBOSE("No data available. Sleeping...");  // DEBUG
-    delay(10);
   }
 }
 
@@ -901,4 +900,5 @@ void loop() {
   } else {
     serial_loop();
   }
+  delay(50);
 }  // end routine loop
