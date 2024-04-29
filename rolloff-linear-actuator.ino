@@ -21,9 +21,12 @@
 #include <ESP8266WiFi.h>
 #include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager
 
+#define TA6586
+// #define DRV8871
+
 #include "Arduino_DebugUtils.h"
 
-#define DEFAULT_LOG_LEVEL DBG_INFO
+#define DEFAULT_LOG_LEVEL DBG_DEBUG
 
 void setup_debug() {
   Debug.timestampOn();
@@ -403,6 +406,11 @@ void receiveCommand() {
             relay = FUNC_STOP;
           }
         }
+        // Prepare to ABORT
+        else if (strcmp(target, "STOP") == 0) {
+          command_input = CMD_STOP;
+          relay = FUNC_STOP;
+        }
         // Prepare for the Lock function
         else if (strcmp(target, "LOCK") == 0) {
           command_input = CMD_LOCK;
@@ -487,6 +495,12 @@ void receiveCommand() {
 // the requested relay.
 //
 bool isStopAllowed() {
+
+  #ifdef TA6586
+  return true;
+  #elif DRV8871
+  return true;
+  #else
   unsigned long timeNow = millis();
 
   // If the roof is either fully opened or fully closed, ignore the request.
@@ -503,6 +517,7 @@ bool isStopAllowed() {
   {
     return true;
   }
+  #endif
 }
 
 /*
@@ -525,10 +540,10 @@ void motor_off() {
 
 void motor_on() {
   // Make sure motors are stopped
-  digitalWrite(FUNC_DIRECTION_A, LOW);   // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_DIRECTION_A, HIGH);   // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
 
-  digitalWrite(FUNC_DIRECTION_B, LOW);   // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_DIRECTION_B, HIGH);   // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
 
   // Enable current to motors
