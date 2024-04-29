@@ -148,7 +148,8 @@ enum cmd_input {
   CMD_LOCK,
   CMD_AUXSET,
   CMD_CONNECT,
-  CMD_DISCONNECT
+  CMD_DISCONNECT,
+  CMD_DISABLE
 } command_input;
 
 
@@ -408,6 +409,11 @@ void receiveCommand() {
         }
         // Prepare to ABORT
         else if (strcmp(target, "STOP") == 0) {
+          command_input = CMD_STOP;
+          relay = FUNC_STOP;
+        }
+        // Prepare to ABORT
+        else if (strcmp(target, "DISABLE") == 0) {
           command_input = CMD_STOP;
           relay = FUNC_STOP;
         }
