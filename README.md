@@ -13,7 +13,7 @@ The driver does not know how the roof is being operated.
 
 [More information is in the documentation file.](doc/rolloffino.md)
 
-# INDIlib driver
+# indilib driver
 ```
 Driver:       RollOff ino
 Executable:   indi_rolloffino
@@ -29,10 +29,10 @@ Set it to `1` to use WiFi, any other value to use serial communication.
 
 Once in WiFi mode, the microcontroller tries to connect to a WiFi Access Point on boot. 
 
-The very first time there is such configured AP, so it fails to connect and it fallback to start its own 
+The very first time there is not such configured AP, so it fails to connect and it fallbacks to start its own 
 Access Point: `AProlloffino`, see code for the default password.
 
-Connect to it to setup the WiFi AP to connect to and reboot the microcontroller.
+Connect to `AProlloffino` to setup the AP to connect to on boot. Then reboot the microcontroller.
 
 # Logging setup
 
