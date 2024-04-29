@@ -765,7 +765,7 @@ void setup_wifi() {
   bool res;
   // res = wm.autoConnect(); // auto generated AP name from chipid
   // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
-  res = wm.autoConnect("AProlloffino", "astroberry");  // password protected ap
+  res = wm.autoConnect("AProlloffino", "thisisrolloffino");  // password protected ap
 
   if (!res) {
     DEBUG_ERROR("Failed to connect");
