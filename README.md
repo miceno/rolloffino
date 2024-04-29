@@ -20,10 +20,17 @@ Executable:   indi_rolloffino
 Minimum INDI: 2.0.1
 ```
 
+# Logging setup
+
+Console is running on the serial port, at 115200. The default log level is DBG_INFO, change it in the code with 
+constant `DEFAULT_LOG_LEVEL`.
+
 # Usage
 
 The microcontroller code allows receiving commands by WiFi or by Serial. A static flag `USE_WIFI` controls the current mode.
 Set it to `1` to use WiFi, any other value to use serial communication.
+
+Sending command by serial and the debug console are not compatible.
 
 # WiFi setup
 
@@ -34,10 +41,18 @@ Access Point: `AProlloffino`, see code for the default password.
 
 Connect to `AProlloffino` to setup the AP to connect to on boot. Then reboot the microcontroller.
 
-# Logging setup
+Here it is a sample of the console output on boot once an access point is configured, it show the device IP:
+```
+*wm:Connecting to SAVED AP: AP_123478
+*wm:connectTimeout not set, ESP waitForConnectResult... 
+*wm:AutoConnect: SUCCESS 
+*wm:STA IP Address: 192.168.1.46
+[ 00:00:01.525 ] connected...yeey :)
+[ 00:00:01.526 ] 
+SSID: AP_123478, IP Address: 192.168.1.46, Signal (RSSI): -58 dBm
+[ 00:00:01.530 ] Network online, ready for rolloffino driver connections.
+```
 
-Console is running on the serial port, at 115200. The default log level is DBG_INFO, change it in the code with 
-constant `DEFAULT_LOG_LEVEL`.
 
 # Socket client
 
