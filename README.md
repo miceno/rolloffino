@@ -53,6 +53,8 @@ SSID: AP_123478, IP Address: 192.168.1.46, Signal (RSSI): -58 dBm
 [ 00:00:01.530 ] Network online, ready for rolloffino driver connections.
 ```
 
+The microcontroller listens on port `8888` by default.
+
 
 # Socket client
 
