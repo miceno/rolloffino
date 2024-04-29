@@ -589,43 +589,32 @@ void closeCommand() {
 void runCommand(int command_input, char* value) {
   DEBUG_DEBUG("runCommand %d, %s", command_input, value); // DEBUG
 
-  // Stop
-  if (command_input == CMD_STOP) {
-
+  switch (command_input) {
+  CMD_STOP: 
     stopCommand();
+    break;
+  CMD_CONNECT:
+    connectCommand();
+    break;
+  /*
+  // AUX Set
+  if (command_input == CMD_AUXSET) {
 
-  } else  // Resume Parsing
-
-    // Connect
-    if (command_input == CMD_CONNECT) {
-
-      connectCommand();
-
-    } else  // Resume Parsing
-            /*
-      // AUX Set
-      if (command_input == CMD_AUXSET) {
-
-        if (strncmp(value, "ON", 2)) {
-          digitalWrite(FUNC_AUX, LOW);
-        }
-        if (strncmp(value, "OFF", 3)) {
-          digitalWrite(FUNC_AUX, HIGH);
-        }
-
-      } else  // Resume Parsing
-      */
-      // Open
-      if (command_input == CMD_OPEN) {
-
-        openCommand();
-      } else  // Resume Parsing
-
-        // Close
-        if (command_input == CMD_CLOSE) {
-          closeCommand();
-        }
-
+    if (strncmp(value, "ON", 2)) {
+      digitalWrite(FUNC_AUX, LOW);
+    }
+    if (strncmp(value, "OFF", 3)) {
+      digitalWrite(FUNC_AUX, HIGH);
+    }
+  } else
+  */
+  CMD_OPEN:
+    openCommand();
+    break;
+  CMD_CLOSE:
+    closeCommand();
+    break;
+  } // switch
   sendAck(value);  // Send acknowledgement that relay pin associated with "target" was activated to value requested
 }
 
