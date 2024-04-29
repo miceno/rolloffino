@@ -28,6 +28,15 @@
 
 #define DEFAULT_LOG_LEVEL DBG_DEBUG
 
+unsigned long timeMove = 0;
+unsigned long MotionStartTime = 0;  // Related to ROOF_MOVEMENT_MIN_TIME_MILLIS GG
+unsigned long MotionEndDelay;       // Related to ROOF_MOTION_END_DELAY_MILLIS GG
+
+
+/*
+ * DEBUG
+ */
+
 void setup_debug() {
   Debug.timestampOn();
   Debug.formatTimestampOn();
@@ -152,10 +161,6 @@ enum cmd_input {
   CMD_DISABLE
 } command_input;
 
-
-unsigned long timeMove = 0;
-unsigned long MotionStartTime = 0;  // Related to ROOF_MOVEMENT_MIN_TIME_MILLIS GG
-unsigned long MotionEndDelay;       // Related to ROOF_MOTION_END_DELAY_MILLIS GG
 
 const int cLen = 15;
 const int tLen = 15;
@@ -912,3 +917,85 @@ void loop() {
   }
   delay(50);
 }  // end routine loop
+
+
+class Motor {
+  public:
+    void motor_off();
+
+    void motor_on();
+
+    void stopCommand();
+
+    void connectCommand();
+
+    void openCommand();
+
+    void closeCommand();
+};
+
+class TA6585 : public Motor {
+  void motor_off() {
+    // Disable current to motors
+    digitalWrite(MOTOR_ENABLE_A, LOW);
+    digitalWrite(MOTOR_ENABLE_B, LOW);
+
+    // Make sure motors are stopped
+    digitalWrite(FUNC_DIRECTION_A, LOW);   // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
+
+    digitalWrite(FUNC_DIRECTION_B, LOW);   // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
+  }
+
+  void motor_on() {
+    // Make sure motors are stopped
+    digitalWrite(FUNC_DIRECTION_A, HIGH);   // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
+
+    digitalWrite(FUNC_DIRECTION_B, HIGH);   // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
+
+    // Enable current to motors
+    digitalWrite(MOTOR_ENABLE_A, HIGH);
+    digitalWrite(MOTOR_ENABLE_B, HIGH);
+  }
+
+  void stopCommand() {
+    motor_off();  // Disable the motor
+    // digitalWrite(FUNC_BLINKER, LOW);
+  }
+
+  void connectCommand() {
+    stopCommand();
+  }
+
+  void openCommand() {
+    // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
+
+    motor_on();                             // Activate the motor
+    digitalWrite(FUNC_DIRECTION_A, LOW);    // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_ACTIVATION_A, HIGH);  // Set actuator in motion
+
+    digitalWrite(FUNC_DIRECTION_B, LOW);    // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_ACTIVATION_B, HIGH);  // Set actuator in motion
+
+    MotionStartTime = millis();
+  }
+
+  void closeCommand() {
+    // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
+
+    motor_on();                            // Activate the motor
+    digitalWrite(FUNC_DIRECTION_A, HIGH);  // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
+
+    digitalWrite(FUNC_DIRECTION_B, HIGH);  // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
+
+    MotionStartTime = millis();
+  }
+};
+
+
+Motor motor = TA6585();
