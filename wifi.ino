@@ -81,9 +81,8 @@ void reconnectWifi() {
   printWifiStatus();
 }
 
-
-void wifi_loop() {
-  // Check still connected to the wifi network
+void reconnect_wifi_helper(){
+    // Check still connected to the wifi network
   DEBUG_VERBOSE("wifi loop");  // DEBUG
   int wifi_status = WiFi.status();
   DEBUG_VERBOSE("wifi status: %d", wifi_status);  // DEBUG
@@ -91,7 +90,9 @@ void wifi_loop() {
     DEBUG_VERBOSE("reconnecting...");  // DEBUG
     reconnectWifi();
   }
+}
 
+WiFiClient get_wifi_client(WiFiClient client){  
   if (!client) {
     client = server.available();
   }
@@ -111,6 +112,13 @@ void wifi_loop() {
   }
   DEBUG_VERBOSE("after client.connected checks");  // DEBUG
 
+  return client;
+}
+
+void wifi_loop() {
+  reconnect_wifi_helper();
+
+  client = get_wifi_client(client);
   // Wait for incoming data from the INDI driver
   if (client) {
     client.flush();
