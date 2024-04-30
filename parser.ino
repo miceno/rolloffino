@@ -107,7 +107,7 @@ char* safeStrTok(char* input, const char* delimiter, char* output) {
   return pointer;
 }
 
-bool parseCommand()  // (command:target:value)
+bool receiveCommand()  // (command:target:value)
 {
   bool start = false;
   bool eof = false;
@@ -187,11 +187,11 @@ bool is_data_available() {
  * negative acknowledgement with message for any errors found.  Dispatch to commandReceived
  * or requestReceived routines to activate the command or get the requested switch state
  */
-void receiveCommand() {
+void parseCommand() {
   // Confirm there is input available, read and parse it.
   if (is_data_available()) {
     DEBUG_VERBOSE("Data is available");  // DEBUG
-    if (parseCommand()) {
+    if (receiveCommand()) {
       unsigned long timeNow = millis();
       int relay = -1;  // -1 = not found, 0 = not implemented, pin number = supported
       int sw = -1;     //      "                 "                    "
@@ -297,7 +297,7 @@ void receiveCommand() {
         else if (sw > 0)  // Get switch response
         {
           DEBUG_VERBOSE("about to get Status");  // DEBUG
-          getStatus(sw, value);
+          getSwitch(sw, value);
           sendAck(value);  // Send result of reading pin associated with "target"
         }
       }  // end !connecting

@@ -122,7 +122,7 @@ void wifi_loop() {
     */
     DEBUG_VERBOSE("available data...");  // DEBUG
     if (client.available() > 0) {
-      receiveCommand();
+      parseCommand();
     }
   } else {
     DEBUG_VERBOSE("No data available. Sleeping...");  // DEBUG

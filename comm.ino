@@ -16,7 +16,7 @@ void serial_loop() {
         delay(100);
     }
   }
-  receiveCommand();  // Some input detected
+  parseCommand();  // Some input detected
 }
 
 

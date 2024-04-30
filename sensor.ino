@@ -36,11 +36,12 @@ bool isSwitchOn(int id) {
 //
 // sw:     The switch's pin identifier.
 // value   getSwitch will read the pin and set this to "ON" or "OFF"
+/*
 void getStatus(int sw, char* value) {
   getSwitch(sw, value);
   sendAck(value);  // Send result of reading pin associated with "target"
 }
-
+*/
 
 
 
