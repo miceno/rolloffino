@@ -2,7 +2,7 @@
 #define __rolloff_linear_actuator_config_h__ 1
 
 
-#define DEFAULT_LOG_LEVEL DBG_DEBUG
+#define DEFAULT_LOG_LEVEL DBG_INFO
 
 #define BAUD_RATE 115200  // USB connection baud rate
 
