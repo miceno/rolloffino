@@ -68,7 +68,7 @@ void TA6586::stopCommand() {
 }
 
 void TA6586::connectCommand() {
-  stopCommand();
+  // Do nothing
 }
 
 void TA6586::openCommand() {
