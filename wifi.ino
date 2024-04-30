@@ -128,8 +128,8 @@ void wifi_loop(Motor *m) {
       indiData = true;
     }
     */
-    DEBUG_VERBOSE("available data...");  // DEBUG
     if (client.available() > 0) {
+      DEBUG_VERBOSE("available data...");  // DEBUG
       parseCommand(m);
     }
   } else {

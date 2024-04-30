@@ -307,8 +307,7 @@ void parseCommand(Motor *m) {
     }    // end command parsed
   }      // end input found
   else {
-    DEBUG_VERBOSE("No data available. Continue...");  // DEBUG
-    delay(100);
+    DEBUG_DEBUG("No data available. Continue...");  // DEBUG
   }
 }
 
