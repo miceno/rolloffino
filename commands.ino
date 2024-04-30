@@ -63,8 +63,8 @@ void motor_off() {
   digitalWrite(FUNC_DIRECTION_A, LOW);   // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
 
-  digitalWrite(FUNC_DIRECTION_B, LOW);   // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
+  digitalWrite(FUNC_DIRECTION_B, HIGH);   // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION_B, HIGH);  // Set actuator in motion
 }
 
 void motor_on() {
