@@ -90,3 +90,20 @@ You can also use `nc` to send commands. You will need to remove end-of-line deli
 ```
 (echo -n "(CON:0:0)" && sleep 1 && echo -n "(SET:OPEN:0)" && sleep 1) | nc 192.168.1.46 8888
 ```
+
+# Pinout for switches
+
+Use the following pinout:
+
+* D1 -> sensor OPENED NC (GPIO5)
+* D2 -> sensor CLOSED NC (GPIO4)
+* G  -> sensor COMM OPENED
+* G  -> sensor COMM CLOSED
+
+# Pinout for TA6586
+
+Use the following pinout:
+* D3 -> in1 motor A   (GPIO0)
+* D4 -> in2 motor A   (GPIO2)
+* D5 -> D3 in1 motor B   (GPIO14)
+* D6 -> D2 in2 motor B   (GPIO12) 

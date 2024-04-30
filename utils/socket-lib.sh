@@ -2,6 +2,10 @@
 SERVER=${SERVER:-192.168.1.46}
 PORT=${PORT:-8888}
 
+function connect_dome(){
+  (echo -n "(CON:0:0)" && sleep 1) | nc $SERVER $PORT
+}
+
 function abort_dome(){
   (echo -n "(SET:ABORT:0)" && sleep 1) | nc $SERVER $PORT
 }
