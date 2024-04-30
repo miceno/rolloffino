@@ -3,17 +3,7 @@
 
 void setup_serial();
 void serial_loop();
-/*
-void checkConnection();
-bool isStopAllowed();
-void motor_off();
-void motor_on();
 
-void stopCommand();
-void openCommand();
-void closeCommand();
-void connectCommand();
-*/
 void getSwitch(int id, char* value);
 bool isSwitchOn(int id);
 // void getStatus(int sw, char* value);

@@ -25,24 +25,5 @@ bool isSwitchOn(int id) {
   return false;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-// Here after pin associations resolved and request action known
-// Request to obtain state of a switch
-// Default action is to read the associated switch and return result to the host
-// target is the name associated with the switch "OPENED", "CLOSED" etc and will
-// be used when sending the acknowledgement to the host. Find out if a certain request is being processed using
-// if (strcmp(target, "OPENED") == 0) {do something}
-//
-// sw:     The switch's pin identifier.
-// value   getSwitch will read the pin and set this to "ON" or "OFF"
-/*
-void getStatus(int sw, char* value) {
-  getSwitch(sw, value);
-  sendAck(value);  // Send result of reading pin associated with "target"
-}
-*/
-
-
 
 #endif
