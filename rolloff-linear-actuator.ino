@@ -111,7 +111,7 @@ void setup() {
   }
 
   // Turn Off the relays.
-  motor->motor_off();
+  motor->motorOff();
 
   // Start server
   server.begin();
@@ -121,7 +121,7 @@ void setup() {
 
 // Wait here for command or switch request from host
 void loop() {
-  motor->check_roof_turn_off_relays();  // GG
+  motor->checkRoofMovement();  // GG
 
   if (USE_WIFI == 1) {
     wifi_loop(motor);

@@ -7,11 +7,13 @@
 #include "Arduino_DebugUtils.h"
 #include "functions.h"
 
+const char* TA6586_VERSION_ID = "V1.3-esp-wifi-magnet-ta6586";
+
 // Check if roof has fully opened or fully closed and turn off relay if so! GG
 bool TA6586::isRoofMoving(){
   return bool(MotionStopTime != 0);
 }
-void TA6586::check_roof_turn_off_relays() {
+void TA6586::checkRoofMovement() {
 
   if (!isRoofMoving()) {
     if (MotionStartTime != 0) {
@@ -34,7 +36,7 @@ void TA6586::check_roof_turn_off_relays() {
   }
 }
 
-void TA6586::motor_off() {
+void TA6586::motorOff() {
   // Disable current to motors
   digitalWrite(MOTOR_ENABLE_A, LOW);
   digitalWrite(MOTOR_ENABLE_B, LOW);
@@ -47,7 +49,7 @@ void TA6586::motor_off() {
   digitalWrite(FUNC_ACTIVATION_B, HIGH);  // Set actuator in motion
 }
 
-void TA6586::motor_on() {
+void TA6586::motorOn() {
   // Make sure motors are stopped
   digitalWrite(FUNC_DIRECTION_A, HIGH);  // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
@@ -61,7 +63,7 @@ void TA6586::motor_on() {
 }
 
 void TA6586::stopCommand() {
-  motor_off();  // Disable the motor
+  motorOff();  // Disable the motor
   // digitalWrite(FUNC_BLINKER, LOW);
 }
 
@@ -72,7 +74,7 @@ void TA6586::connectCommand() {
 void TA6586::openCommand() {
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
 
-  motor_on();                             // Activate the motor
+  motorOn();                             // Activate the motor
   digitalWrite(FUNC_DIRECTION_A, LOW);    // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_A, HIGH);  // Set actuator in motion
 
@@ -85,7 +87,7 @@ void TA6586::openCommand() {
 void TA6586::closeCommand() {
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
 
-  motor_on();                            // Activate the motor
+  motorOn();                            // Activate the motor
   digitalWrite(FUNC_DIRECTION_A, HIGH);  // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
 
@@ -95,6 +97,9 @@ void TA6586::closeCommand() {
   MotionStartTime = millis();
 }
 
+const char *TA6586::getVersion(){
+  return TA6586_VERSION_ID;
+}
 
 bool TA6586::isStopAllowed() {
   return true;

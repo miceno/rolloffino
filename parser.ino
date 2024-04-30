@@ -201,8 +201,9 @@ void parseCommand(Motor *m) {
       // On initial connection return the version
       if (strcmp(command, "CON") == 0) {
         connecting = true;
-        strcpy(value, VERSION_ID);  // Can be seen on host to confirm what is running
+        strcpy(value, m->getVersion());  // Can be seen on host to confirm what is running
         m->runCommand(CMD_CONNECT, value);
+        sendAck(value);
       }
 
       // Map the general input command term to the local action

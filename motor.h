@@ -19,9 +19,9 @@ class Motor {
 public:
   virtual void runCommand(int command_input, char* value);
 
-  virtual void motor_off() = 0;
+  virtual void motorOff() = 0;
 
-  virtual void motor_on() = 0;
+  virtual void motorOn() = 0;
 
   virtual void stopCommand() = 0;
 
@@ -33,7 +33,8 @@ public:
 
   virtual bool isRoofMoving() = 0;
   virtual bool isStopAllowed() = 0;
-  virtual void check_roof_turn_off_relays() = 0;
+  virtual void checkRoofMovement() = 0;
+  virtual const char *getVersion() = 0;
 };
 
 class TA6586 : public Motor {
@@ -43,11 +44,11 @@ public:
 public:
   bool isRoofMoving();
   bool isStopAllowed();
-  void check_roof_turn_off_relays();
+  void checkRoofMovement();
 
-  void motor_off();
+  void motorOff();
 
-  void motor_on();
+  void motorOn();
 
   void stopCommand();
 
@@ -56,6 +57,7 @@ public:
   void openCommand();
 
   void closeCommand();
+  const char *getVersion();
 
 };
 #endif
