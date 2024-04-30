@@ -37,6 +37,7 @@ void TA6586::checkRoofMovement() {
 }
 
 void TA6586::motorOff() {
+  DEBUG_INFO("Switch motor off");
   // Disable current to motors
   digitalWrite(MOTOR_ENABLE_A, LOW);
   digitalWrite(MOTOR_ENABLE_B, LOW);
@@ -50,16 +51,8 @@ void TA6586::motorOff() {
 }
 
 void TA6586::motorOn() {
-  // Make sure motors are stopped
-  digitalWrite(FUNC_DIRECTION_A, HIGH);  // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
-
-  digitalWrite(FUNC_DIRECTION_B, HIGH);  // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
-
-  // Enable current to motors
-  digitalWrite(MOTOR_ENABLE_A, HIGH);
-  digitalWrite(MOTOR_ENABLE_B, HIGH);
+  DEBUG_INFO("Switch motor on");
+  // Make sure motors starts
 }
 
 void TA6586::stopCommand() {
