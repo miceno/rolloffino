@@ -33,66 +33,71 @@ void TA6586::check_roof_turn_off_relays() {
     MotionStartTime = 0;
   }
 }
-  void TA6586::motor_off() {
-    // Disable current to motors
-    digitalWrite(MOTOR_ENABLE_A, LOW);
-    digitalWrite(MOTOR_ENABLE_B, LOW);
 
-    // Make sure motors are stopped
-    digitalWrite(FUNC_DIRECTION_A, LOW);   // Set actuator voltage leads to open actuator
-    digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
+void TA6586::motor_off() {
+  // Disable current to motors
+  digitalWrite(MOTOR_ENABLE_A, LOW);
+  digitalWrite(MOTOR_ENABLE_B, LOW);
 
-    digitalWrite(FUNC_DIRECTION_B, LOW);   // Set actuator voltage leads to open actuator
-    digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
-  }
+  // Make sure motors are stopped
+  digitalWrite(FUNC_DIRECTION_A, LOW);   // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
 
-  void TA6586::motor_on() {
-    // Make sure motors are stopped
-    digitalWrite(FUNC_DIRECTION_A, HIGH);  // Set actuator voltage leads to open actuator
-    digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
+  digitalWrite(FUNC_DIRECTION_B, HIGH);   // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION_B, HIGH);  // Set actuator in motion
+}
 
-    digitalWrite(FUNC_DIRECTION_B, HIGH);  // Set actuator voltage leads to open actuator
-    digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
+void TA6586::motor_on() {
+  // Make sure motors are stopped
+  digitalWrite(FUNC_DIRECTION_A, HIGH);  // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
 
-    // Enable current to motors
-    digitalWrite(MOTOR_ENABLE_A, HIGH);
-    digitalWrite(MOTOR_ENABLE_B, HIGH);
-  }
+  digitalWrite(FUNC_DIRECTION_B, HIGH);  // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
 
-  void TA6586::stopCommand() {
-    motor_off();  // Disable the motor
-    // digitalWrite(FUNC_BLINKER, LOW);
-  }
+  // Enable current to motors
+  digitalWrite(MOTOR_ENABLE_A, HIGH);
+  digitalWrite(MOTOR_ENABLE_B, HIGH);
+}
 
-  void TA6586::connectCommand() {
-    stopCommand();
-  }
+void TA6586::stopCommand() {
+  motor_off();  // Disable the motor
+  // digitalWrite(FUNC_BLINKER, LOW);
+}
 
-  void TA6586::openCommand() {
-    // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
+void TA6586::connectCommand() {
+  stopCommand();
+}
 
-    motor_on();                             // Activate the motor
-    digitalWrite(FUNC_DIRECTION_A, LOW);    // Set actuator voltage leads to open actuator
-    digitalWrite(FUNC_ACTIVATION_A, HIGH);  // Set actuator in motion
+void TA6586::openCommand() {
+  // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
 
-    digitalWrite(FUNC_DIRECTION_B, LOW);    // Set actuator voltage leads to open actuator
-    digitalWrite(FUNC_ACTIVATION_B, HIGH);  // Set actuator in motion
+  motor_on();                             // Activate the motor
+  digitalWrite(FUNC_DIRECTION_A, LOW);    // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION_A, HIGH);  // Set actuator in motion
 
-    MotionStartTime = millis();
-  }
+  digitalWrite(FUNC_DIRECTION_B, LOW);    // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION_B, HIGH);  // Set actuator in motion
 
-  void TA6586::closeCommand() {
-    // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
+  MotionStartTime = millis();
+}
 
-    motor_on();                            // Activate the motor
-    digitalWrite(FUNC_DIRECTION_A, HIGH);  // Set actuator voltage leads to open actuator
-    digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
+void TA6586::closeCommand() {
+  // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
 
-    digitalWrite(FUNC_DIRECTION_B, HIGH);  // Set actuator voltage leads to open actuator
-    digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
+  motor_on();                            // Activate the motor
+  digitalWrite(FUNC_DIRECTION_A, HIGH);  // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
 
-    MotionStartTime = millis();
-  }
+  digitalWrite(FUNC_DIRECTION_B, HIGH);  // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
 
+  MotionStartTime = millis();
+}
+
+
+bool TA6586::isStopAllowed() {
+  return true;
+}
 
 #endif

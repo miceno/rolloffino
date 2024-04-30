@@ -142,7 +142,7 @@ bool receiveCommand()  // (command:target:value)
       continue;
     }
     wait++;
-    delay(100);
+    // delay(100);
   }
   DEBUG_INFO("Received command=%s", inpBuf);  // DEBUG
 
@@ -187,7 +187,7 @@ bool is_data_available() {
  * negative acknowledgement with message for any errors found.  Dispatch to commandReceived
  * or requestReceived routines to activate the command or get the requested switch state
  */
-void parseCommand() {
+void parseCommand(Motor *m) {
   // Confirm there is input available, read and parse it.
   if (is_data_available()) {
     DEBUG_VERBOSE("Data is available");  // DEBUG
@@ -202,7 +202,7 @@ void parseCommand() {
       if (strcmp(command, "CON") == 0) {
         connecting = true;
         strcpy(value, VERSION_ID);  // Can be seen on host to confirm what is running
-        checkConnection();
+        m->runCommand(CMD_CONNECT, value);
       }
 
       // Map the general input command term to the local action
@@ -225,7 +225,7 @@ void parseCommand() {
           command_input = CMD_STOP;
 
           // Test whether or not to Abort
-          if (!isStopAllowed()) {
+          if (!m->isStopAllowed()) {
             error = ERROR10;
           } else {
             relay = FUNC_STOP;
@@ -290,7 +290,9 @@ void parseCommand() {
         // Set the relay associated with the command and send acknowlege to host
         else if (relay > 0)  // Set Relay response
         {
-          runCommand(command_input, value);
+          m->runCommand(command_input, value);
+          // Send acknowledgement that relay pin associated with "target" was activated to value requested
+          sendAck(value);
         }
 
         // A state request was received
@@ -305,6 +307,7 @@ void parseCommand() {
   }      // end input found
   else {
     DEBUG_VERBOSE("No data available. Continue...");  // DEBUG
+    delay(100);
   }
 }
 

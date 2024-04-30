@@ -48,18 +48,7 @@ const char* ERROR9 = "Request not implemented in controller";
 const char* ERROR10 = "Abort command ignored, roof already stationary";
 
 
-enum cmd_input {
-  CMD_NONE,
-  CMD_OPEN,
-  CMD_CLOSE,
-  CMD_STOP,
-  CMD_LOCK,
-  CMD_AUXSET,
-  CMD_CONNECT,
-  CMD_DISCONNECT,
-  CMD_DISABLE
-} command_input;
-
+cmd_input command_input;
 
 const int cLen = 15;
 const int tLen = 15;
@@ -100,6 +89,7 @@ boolean indiConnected = false;      // Driver has connected to local network
 // value: How to set the relay "ON" or "OFF"
 //
 //
+/*
 void runCommand(int command_input, char* value) {
   DEBUG_DEBUG("runCommand %d, %s", command_input, value);  // DEBUG
 
@@ -110,7 +100,7 @@ void runCommand(int command_input, char* value) {
     case CMD_CONNECT:
       connectCommand();
       break;
-    /*
+    *//*
   // AUX Set
   if (command_input == CMD_AUXSET) {
 
@@ -121,7 +111,7 @@ void runCommand(int command_input, char* value) {
       digitalWrite(FUNC_AUX, HIGH);
     }
   } else
-  */
+  *//*
     case CMD_OPEN:
       openCommand();
       break;
@@ -131,7 +121,7 @@ void runCommand(int command_input, char* value) {
   }                // switch
   sendAck(value);  // Send acknowledgement that relay pin associated with "target" was activated to value requested
 }
-
+*/
 
 /*
  * One time initialization
@@ -168,7 +158,7 @@ void setup() {
   }
 
   // Turn Off the relays.
-  motor_off();
+  motor->motor_off();
 
   // Start server
   server.begin();
@@ -181,10 +171,10 @@ void loop() {
   motor->check_roof_turn_off_relays();  // GG
 
   if (USE_WIFI == 1) {
-    wifi_loop();
+    wifi_loop(motor);
   } else {
     serial_loop();
   }
-  delay(50);
+  delay(100);
 }  // end routine loop
 

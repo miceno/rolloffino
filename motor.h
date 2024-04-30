@@ -2,9 +2,23 @@
 #ifndef __motor_h__
 #define __motor_h__
 
+enum cmd_input {
+  CMD_NONE,
+  CMD_OPEN,
+  CMD_CLOSE,
+  CMD_STOP,
+  CMD_LOCK,
+  CMD_AUXSET,
+  CMD_CONNECT,
+  CMD_DISCONNECT,
+  CMD_DISABLE
+};
+
 
 class Motor {
 public:
+  virtual void runCommand(int command_input, char* value);
+
   virtual void motor_off() = 0;
 
   virtual void motor_on() = 0;
@@ -18,6 +32,7 @@ public:
   virtual void closeCommand() = 0;
 
   virtual bool isRoofMoving() = 0;
+  virtual bool isStopAllowed() = 0;
   virtual void check_roof_turn_off_relays() = 0;
 };
 
@@ -27,8 +42,8 @@ public:
   unsigned long MotionStopTime = 0;
 public:
   bool isRoofMoving();
+  bool isStopAllowed();
   void check_roof_turn_off_relays();
-
 
   void motor_off();
 
@@ -41,5 +56,6 @@ public:
   void openCommand();
 
   void closeCommand();
+
 };
 #endif

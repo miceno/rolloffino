@@ -115,7 +115,7 @@ WiFiClient get_wifi_client(WiFiClient client){
   return client;
 }
 
-void wifi_loop() {
+void wifi_loop(Motor *m) {
   reconnect_wifi_helper();
 
   client = get_wifi_client(client);
@@ -130,7 +130,7 @@ void wifi_loop() {
     */
     DEBUG_VERBOSE("available data...");  // DEBUG
     if (client.available() > 0) {
-      parseCommand();
+      parseCommand(m);
     }
   } else {
     DEBUG_VERBOSE("No data available. Sleeping...");  // DEBUG

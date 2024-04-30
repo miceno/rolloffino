@@ -1,11 +1,11 @@
 #ifndef __rolloff_linear_actuator_commands__
 #define __rolloff_linear_actuator_commands__
-
+/*
 void checkConnection() {
   runCommand(CMD_CONNECT, value);
   // sendAck(value);
 }
-
+*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // Abort movement command received, test to see if abort is allowed.
@@ -23,6 +23,7 @@ void checkConnection() {
 // Returning true will cause the Abort request to appear in the commandReceived routine where it will activate
 // the requested relay.
 //
+/*
 bool isStopAllowed() {
 
 #ifdef TA6586
@@ -48,12 +49,12 @@ bool isStopAllowed() {
   }
 #endif
 }
-
+*/
 /*
  * Commands
  *
 */
-
+/*
 void motor_off() {
   // Disable current to motors
   digitalWrite(MOTOR_ENABLE_A, LOW);
@@ -114,5 +115,5 @@ void closeCommand() {
 
   MotionStartTime = millis();
 }
-
+*/
 #endif
