@@ -37,8 +37,8 @@
 // #define RELAY_4 12
 #define RELAY_5 13  // D7: Enable motor A
 
-#define RELAY_10 0   // D3: Actuator Power GG
-#define RELAY_11 2   // D4: Direction GG
+#define RELAY_10 0   // D3: Motor B PWM
+#define RELAY_11 2   // D4: Motor B direction
 #define RELAY_12 15  // D8: Enable motor B
 
 #define MOTOR_ENABLE_A RELAY_5
