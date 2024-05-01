@@ -102,8 +102,8 @@ Use the following pinout:
 
 # Pinout for TA6586
 
-Use the following pinout:
-* D3 -> in1 motor A   (GPIO0)
-* D4 -> in2 motor A   (GPIO2)
+Use the following pinout (from ESP8266 to motor board)
+* D3 -> D1 in1 motor A   (GPIO0)
+* D4 -> D0 in2 motor A   (GPIO2)
 * D5 -> D3 in1 motor B   (GPIO14)
 * D6 -> D2 in2 motor B   (GPIO12) 
