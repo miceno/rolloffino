@@ -60,4 +60,30 @@ public:
   const char *getVersion();
 
 };
+
+class DRV8871 : public Motor {
+public:
+  unsigned long MotionStartTime = 0;
+  unsigned long MotionStopTime = 0;
+public:
+  bool isRoofMoving();
+  bool isStopAllowed();
+  void checkRoofMovement();
+
+  void motorOff();
+
+  void motorOn();
+
+  void stopCommand();
+
+  void connectCommand();
+
+  void openCommand();
+
+  void closeCommand();
+  const char *getVersion();
+
+};
+
+
 #endif

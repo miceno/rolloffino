@@ -61,10 +61,9 @@ unsigned long timeMove = 0;
 unsigned long MotionStartTime = 0;  // Related to ROOF_MOVEMENT_MIN_TIME_MILLIS GG
 unsigned long MotionStopTime;       // Related to ROOF_MOTION_END_DELAY_MILLIS GG
 
-Motor* motor = new TA6586();
+// Motor* motor = new TA6586();
+Motor* motor = new DRV8871();
 
-#define TA6586
-// #define DRV8871
 
 IPAddress ip(INTERNET_ADDR);       // AP local Internet address
 IPAddress gw(GATEWAY_ADDR);        // AP gateway address
