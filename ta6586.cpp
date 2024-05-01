@@ -38,9 +38,6 @@ void TA6586::checkRoofMovement() {
 
 void TA6586::motorOff() {
   DEBUG_INFO("Switch motor off");
-  // Disable current to motors
-  digitalWrite(MOTOR_ENABLE_A, LOW);
-  digitalWrite(MOTOR_ENABLE_B, LOW);
 
   // Make sure motors are stopped
   digitalWrite(FUNC_DIRECTION_A, LOW);   // Set actuator voltage leads to open actuator
@@ -67,7 +64,7 @@ void TA6586::connectCommand() {
 void TA6586::openCommand() {
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
 
-  motorOn();                             // Activate the motor
+  motorOn();                              // Activate the motor
   digitalWrite(FUNC_DIRECTION_A, LOW);    // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_A, HIGH);  // Set actuator in motion
 
@@ -80,7 +77,7 @@ void TA6586::openCommand() {
 void TA6586::closeCommand() {
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
 
-  motorOn();                            // Activate the motor
+  motorOn();                             // Activate the motor
   digitalWrite(FUNC_DIRECTION_A, HIGH);  // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
 
@@ -90,7 +87,7 @@ void TA6586::closeCommand() {
   MotionStartTime = millis();
 }
 
-const char *TA6586::getVersion(){
+const char* TA6586::getVersion() {
   return TA6586_VERSION_ID;
 }
 

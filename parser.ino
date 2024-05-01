@@ -213,13 +213,11 @@ void parseCommand(Motor *m) {
         if (strcmp(target, "OPEN") == 0) {
           command_input = CMD_OPEN;
           relay = FUNC_ACTIVATION;
-          timeMove = timeNow;
         }
         // Prepare to CLOSE
         else if (strcmp(target, "CLOSE") == 0) {
           command_input = CMD_CLOSE;
           relay = FUNC_ACTIVATION;
-          timeMove = timeNow;
         }
         // Prepare to ABORT
         else if (strcmp(target, "ABORT") == 0) {

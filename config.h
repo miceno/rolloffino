@@ -35,14 +35,10 @@
 #define RELAY_2 12  // D6: Motor A direction
 // #define RELAY_3 8
 // #define RELAY_4 12
-#define RELAY_5 13  // D7: Enable motor A
 
 #define RELAY_10 0   // D3: Motor B PWM
 #define RELAY_11 2   // D4: Motor B direction
-#define RELAY_12 15  // D8: Enable motor B
 
-#define MOTOR_ENABLE_A RELAY_5
-#define MOTOR_ENABLE_B RELAY_12
 
 // Indirection to define a functional name in terms of a switch
 // Use 0 if switch not implemented
@@ -63,18 +59,6 @@
 #define FUNC_LOCK 0              // If automated roof lock is available.
 #define FUNC_AUX 0          // Relay to turn ON or OFF observatory lights GG
 #define FUNC_BLINKER 0     // Relay to turn safety  on/off GG
-
-/*
- * Abort (stop) request is only meaningful if roof is in motion.
- *
- * On Abort for a single button controller, only want to activate relay and pulse the controller if
- * the roof is still moving, then it would stop. If it has already reached the end of its
- * travel, a pulse could set it off again in the opposite direction.
- *
- * In case the end of run switches are not reached, some way to know if it is moving
- * would be helpful. Short of that estimate how long it takes the roof to open or close
- */
-#define ROOF_OPEN_MILLI 60000
 
 /*
  * GG

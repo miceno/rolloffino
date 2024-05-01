@@ -57,7 +57,6 @@ char command[cLen + 1];
 char target[tLen + 1];
 char value[vLen + 1];
 
-unsigned long timeMove = 0;
 unsigned long MotionStartTime = 0;  // Related to ROOF_MOVEMENT_MIN_TIME_MILLIS GG
 unsigned long MotionStopTime;       // Related to ROOF_MOTION_END_DELAY_MILLIS GG
 
@@ -94,11 +93,9 @@ void setup() {
   pinMode(RELAY_2, OUTPUT);
   // pinMode(RELAY_3, OUTPUT);
   // pinMode(RELAY_4, OUTPUT);
-  pinMode(RELAY_5, OUTPUT);
 
   pinMode(RELAY_10, OUTPUT);
   pinMode(RELAY_11, OUTPUT);
-  pinMode(RELAY_12, OUTPUT);
 
   setup_debug();
 
