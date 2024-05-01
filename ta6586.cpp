@@ -10,7 +10,7 @@
 const char* TA6586_VERSION_ID = "V1.3-esp-wifi-magnet-ta6586";
 
 // Check if roof has fully opened or fully closed and turn off relay if so! GG
-bool TA6586::isRoofMoving(){
+bool TA6586::isRoofMoving() {
   return bool(MotionStopTime != 0);
 }
 void TA6586::checkRoofMovement() {
@@ -19,13 +19,13 @@ void TA6586::checkRoofMovement() {
     if (MotionStartTime != 0) {
       if ((millis() - MotionStartTime) > ROOF_MOVEMENT_MIN_TIME_MILLIS) {
         if (isSwitchOn(SWITCH_OPENED) || isSwitchOn(SWITCH_CLOSED)) {
-          DEBUG_INFO("Roof is not moving...");  // DEBUG
-          MotionStopTime = millis();
+          DEBUG_INFO("Sensors say roof is open or closed: it is not moving...");  // DEBUG
         }
+        MotionStopTime = millis();
       }
     }
   } else {
-    // Roof is moving  
+    // Roof is moving
     // Add some delay for complete roof opening or closure
     if ((millis() - MotionStopTime) > ROOF_MOTION_END_DELAY_MILLIS) {
       DEBUG_INFO("Stop...");  // DEBUG
