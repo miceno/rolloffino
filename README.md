@@ -91,19 +91,54 @@ You can also use `nc` to send commands. You will need to remove end-of-line deli
 (echo -n "(CON:0:0)" && sleep 1 && echo -n "(SET:OPEN:0)" && sleep 1) | nc 192.168.1.46 8888
 ```
 
-# Pinout for switches
+# Set up
 
-Use the following pinout:
+## Pinout for sensors
 
-* D1 -> sensor OPENED NC (GPIO5)
-* D2 -> sensor CLOSED NC (GPIO4)
-* G  -> sensor COMM OPENED
-* G  -> sensor COMM CLOSED
+The microcontroller senses the begin and end position of the roof, by using a couple of sensor. 
+The main sensor used is a magnetic switch.
 
-# Pinout for TA6586
+Use the following pinout (from ESP8266 to switches), and set the corresponding value on the `config.h` file:
 
-Use the following pinout (from ESP8266 to motor board)
-* D3 -> D1 in1 motor A   (GPIO0)
-* D4 -> D0 in2 motor A   (GPIO2)
-* D5 -> D3 in1 motor B   (GPIO14)
-* D6 -> D2 in2 motor B   (GPIO12) 
+* D1 (GPIO5)  -> sensor OPENED NC    -> SWITCH_1
+* G           -> sensor OPENED COMM
+* D2 (GPIO4)  -> sensor CLOSED NC    -> SWITCH_2
+* G           -> sensor CLOSED COMM
+
+## Pinout for TA6586
+
+TA6586 is a 2-channel motor controller.
+
+Use the following pinout (from ESP8266 to motor board), and set the corresponding value on the `config.h` file:
+* D3 (GPIO0)  -> D1 motor B      -> RELAY_B1
+* D4 (GPIO2)  -> D0 motor B      -> RELAY_B2
+* D5 (GPIO14) -> D3 motor A      -> RELAY_A1
+* D6 (GPIO12) -> D2 motor A      -> RELAY_A2
+
+In the case of an ESP8266 with an OLED display, pins D5 and D6 are used for communication with the display, so you should 
+choose another ones:
+* D7 (GPIO13) -> D3 motor A      -> RELAY_A1
+* D8 (GPIO15) -> D2 motor A      -> RELAY_A2
+
+## Pinout for DRV8871
+
+DRV8871 is a 1-channel motor controller, so the pinout is per motor board:
+
+Use the following pinout (from ESP8266 to motor board), and set the corresponding value on the `config.h` file:
+* D3 (GPIO0)  -> IN1 motor B      -> RELAY_B1
+* D4 (GPIO2)  -> IN2 motor B      -> RELAY_B2
+* D5 (GPIO14) -> IN1 motor A      -> RELAY_A1
+* D6 (GPIO12) -> IN2 motor A      -> RELAY_A2
+
+In the case of an ESP8266 with an OLED display, pins D5 and D6 are used for communication with the display, so you should 
+choose another ones:
+* D7 (GPIO13) -> IN1 motor A      -> RELAY_A1
+* D8 (GPIO15) -> IN2 motor A      -> RELAY_A2
+
+## Stop motor timeout
+
+Once the motor starts moving, it will continue indefinitely. Some linear actuators have limit sensors, so the motion will stop
+but the motor will still be powered. In order to reduce power, the microcontroller stops the motors after a timeout.
+
+It might be your linear actuators are faster or slower, so adjust the value for `ROOF_MOVEMENT_MIN_TIME_MILLIS` accordingly in 
+`config.h`.

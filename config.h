@@ -26,19 +26,18 @@
 // #define OPEN_CONTACT LOW  // Switch definition, Change to HIGH if pull-up resistors are used.
 
 // Define name to pin assignments
-#define SWITCH_1 5  // D1
-#define SWITCH_2 4  // D2
+#define SWITCH_1 D1
+#define SWITCH_2 D2
 //#define SWITCH_3 A2
 //#define SWITCH_4 A3
 
-#define RELAY_1 14  // D5: Motor A PWM
-#define RELAY_2 12  // D6: Motor A direction
+#define RELAY_A1 D7  // Motor A PWM
+#define RELAY_A2 D8  // Motor A direction
 // #define RELAY_3 8
 // #define RELAY_4 12
 
-#define RELAY_10 0   // D3: Motor B PWM
-#define RELAY_11 2   // D4: Motor B direction
-
+#define RELAY_B1 D3   // Motor B PWM
+#define RELAY_B2 D4   // Motor B direction
 
 // Indirection to define a functional name in terms of a switch
 // Use 0 if switch not implemented
@@ -52,10 +51,10 @@
 #define FUNC_ACTIVATION 100  // Activation relay connected to the direction relay GG
 #define FUNC_STOP 200        // FUNC_STOP (abort) needs only to operate activation relay GG
 
-#define FUNC_ACTIVATION_A RELAY_1   // Activation relay connected to the direction relay GG
-#define FUNC_DIRECTION_A RELAY_2    // Direction relay inverts the power for either actuator extension or retraction GG
-#define FUNC_ACTIVATION_B RELAY_10  // Activation relay connected to the direction relay GG
-#define FUNC_DIRECTION_B RELAY_11   // Direction relay inverts the power for either actuator extension or retraction GG
+#define FUNC_ACTIVATION_A RELAY_A1   // Activation relay connected to the direction relay GG
+#define FUNC_DIRECTION_A RELAY_A2    // Direction relay inverts the power for either actuator extension or retraction GG
+#define FUNC_ACTIVATION_B RELAY_B1  // Activation relay connected to the direction relay GG
+#define FUNC_DIRECTION_B RELAY_B2   // Direction relay inverts the power for either actuator extension or retraction GG
 #define FUNC_LOCK 0              // If automated roof lock is available.
 #define FUNC_AUX 0          // Relay to turn ON or OFF observatory lights GG
 #define FUNC_BLINKER 0     // Relay to turn safety  on/off GG
@@ -65,6 +64,8 @@
  * Delays required  1) before checking limit switches when the roof opens and
  *                  2) before turning the power off, after the limit switches are activated
  * May need to be adjusted
+ * In case the end of run switches are not reached, some way to know if it is moving
+ * would be helpful. Short of that estimate how long it takes the roof to open or close
  */
 #define ROOF_MOVEMENT_MIN_TIME_MILLIS 20000
 #define ROOF_MOTION_END_DELAY_MILLIS 5000

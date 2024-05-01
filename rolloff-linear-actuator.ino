@@ -89,13 +89,13 @@ void setup() {
 
   // Initialize the relays
   //Pin Setups
-  pinMode(RELAY_1, OUTPUT);
-  pinMode(RELAY_2, OUTPUT);
+  pinMode(RELAY_A1, OUTPUT);
+  pinMode(RELAY_A2, OUTPUT);
   // pinMode(RELAY_3, OUTPUT);
   // pinMode(RELAY_4, OUTPUT);
 
-  pinMode(RELAY_10, OUTPUT);
-  pinMode(RELAY_11, OUTPUT);
+  pinMode(RELAY_B1, OUTPUT);
+  pinMode(RELAY_B2, OUTPUT);
 
   setup_debug();
 
@@ -112,7 +112,6 @@ void setup() {
   // Start server
   server.begin();
 }
-
 
 
 // Wait here for command or switch request from host
