@@ -86,7 +86,7 @@ Modify to requirements
 
 The terms HIGH, LOW, ON, OFF are defined by the Arduino environment and explained in the Arduino IDE documentation.
 
-For the relays and switches in use define the pin numbers that match the wiring. The commands from the driver OPEN, CLOSE, ABORT, AUXSET are associated with a relay RELAY_1, RELAY_2, RELAY_3, RELAY_4. And those relay names are in turn defined to be a particular pin number on the Arduino. Define similar associations for the driver requests to read the fully open, fully closed and other switches.
+For the relays and switches in use define the pin numbers that match the wiring. The commands from the driver OPEN, CLOSE, ABORT, AUXSET are associated with a relay RELAY_A1, RELAY_A2, RELAY_3, RELAY_4. And those relay names are in turn defined to be a particular pin number on the Arduino. Define similar associations for the driver requests to read the fully open, fully closed and other switches.
 
 Then you define for each of the relays if they are to be set and left in the requested state or if just a momentary set is to be used. If for the relay associated with the command the HOLD is set to 0, it will be closed and released. The timing of this is defined below by the DELAY settings. The idea is to emulate a push and release of a button. If for particular a relay HOLD is defined as 1, then the relay will be set and left closed or opened depending upon the request.
 
