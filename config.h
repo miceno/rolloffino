@@ -86,4 +86,8 @@
 #define SUBNET_ADDR 255, 255, 255, 0   // Subnet address
 #define INTERNET_PORT 8888             // Listen on telnet port, match in INDI driver tab
 
+#define CONSOLE_POWER_MODE PWC_ENABLE
+// Timeout in seconds to switch the console off
+#define CONSOLE_POWER_TIMEOUT 10
+
 #endif

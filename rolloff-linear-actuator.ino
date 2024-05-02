@@ -33,6 +33,7 @@
 #include "config.h"
 #include "motor.h"
 #include "functions.h"
+#include "oled_console.h"
 
 const char* VERSION_ID = "V1.3-esp-2ch-wifi-magnet-3";
 //  Maximum length of messages = 63                                               *|
@@ -61,7 +62,8 @@ unsigned long MotionStartTime = 0;  // Related to ROOF_MOVEMENT_MIN_TIME_MILLIS 
 unsigned long MotionStopTime;       // Related to ROOF_MOTION_END_DELAY_MILLIS GG
 
 // Motor* motor = new TA6586();
-Motor* motor = new DRV8871();
+OledConsole *oled_console = new OledConsole(CONSOLE_POWER_TIMEOUT, CONSOLE_POWER_MODE);
+Motor* motor = new TA6586();
 
 
 IPAddress ip(INTERNET_ADDR);       // AP local Internet address
@@ -80,6 +82,8 @@ boolean indiConnected = false;      // Driver has connected to local network
 void setup() {
   // Wait for all ports to stabilize
   delay(100);
+  motor->oledConsole = oled_console;
+  oled_setup();
 
   // Initialize the input switches
   pinMode(SWITCH_1, INPUT_PULLUP);
@@ -121,8 +125,9 @@ void loop() {
   if (USE_WIFI == 1) {
     wifi_loop(motor);
   } else {
-    serial_loop();
+    serial_loop(motor);
   }
+  oled_loop(oled_console);
   delay(100);
 }  // end routine loop
 

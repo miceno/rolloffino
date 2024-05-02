@@ -5,6 +5,7 @@
 #include "config.h"
 #include "Arduino_DebugUtils.h"
 #include "functions.h"
+#include "oled_console.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Action command received

@@ -2,6 +2,8 @@
 #ifndef __motor_h__
 #define __motor_h__
 
+#include "oled_console.h"
+
 enum cmd_input {
   CMD_NONE,
   CMD_OPEN,
@@ -16,6 +18,8 @@ enum cmd_input {
 
 
 class Motor {
+public:
+  OledConsole *oledConsole;
 public:
   virtual void runCommand(int command_input, char *value);
 
