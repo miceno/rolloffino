@@ -52,6 +52,8 @@ void TA6586::motorOff() {
   // Set both to high to disable motor.
   digitalWrite(FUNC_DIRECTION_B, HIGH);
   digitalWrite(FUNC_ACTIVATION_B, HIGH);
+  MotionStartTime = 0;
+  MotionStopTime = 0;
 }
 
 void TA6586::motorOn() {
@@ -81,6 +83,7 @@ void TA6586::openCommand() {
   digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
 
   MotionStartTime = millis();
+  MotionStopTime = 0;
 }
 
 void TA6586::closeCommand() {
@@ -94,6 +97,7 @@ void TA6586::closeCommand() {
   digitalWrite(FUNC_ACTIVATION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));  // Set actuator in motion
 
   MotionStartTime = millis();
+  MotionStopTime = 0;
 }
 
 const char* TA6586::getVersion() {
