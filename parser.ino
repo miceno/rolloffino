@@ -202,7 +202,7 @@ void parseCommand(Motor *m) {
       if (strcmp(command, "CON") == 0) {
         connecting = true;
         strcpy(value, m->getVersion());  // Can be seen on host to confirm what is running
-        m->oledConsole->log(value);
+        m->oledConsole->print(value);
         m->runCommand(CMD_CONNECT, value);
         sendAck(value);
       }

@@ -30,7 +30,7 @@ OledConsole::OledConsole(unsigned long timeout, power_mode_console mode){
 }
 
 
-void OledConsole::log(const char *message){
+void OledConsole::print(const char *message){
   ssd1306_displayOn();
   console.println(message);
   console.print("\n");

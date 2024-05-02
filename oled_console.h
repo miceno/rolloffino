@@ -18,7 +18,7 @@ class OledConsole {
     int lastTimeWrite = 0;
   public:
     OledConsole(unsigned long timeout, power_mode_console mode);
-    void log(const char *);
+    void print(const char *);
     void apply_power_mode();
 };
 
