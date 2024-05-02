@@ -57,14 +57,12 @@ char command[cLen + 1];
 char target[tLen + 1];
 char value[vLen + 1];
 
-unsigned long timeMove = 0;
 unsigned long MotionStartTime = 0;  // Related to ROOF_MOVEMENT_MIN_TIME_MILLIS GG
 unsigned long MotionStopTime;       // Related to ROOF_MOTION_END_DELAY_MILLIS GG
 
-Motor* motor = new TA6586();
+// Motor* motor = new TA6586();
+Motor* motor = new DRV8871();
 
-#define TA6586
-// #define DRV8871
 
 IPAddress ip(INTERNET_ADDR);       // AP local Internet address
 IPAddress gw(GATEWAY_ADDR);        // AP gateway address
@@ -91,15 +89,13 @@ void setup() {
 
   // Initialize the relays
   //Pin Setups
-  pinMode(RELAY_1, OUTPUT);
-  pinMode(RELAY_2, OUTPUT);
+  pinMode(RELAY_A1, OUTPUT);
+  pinMode(RELAY_A2, OUTPUT);
   // pinMode(RELAY_3, OUTPUT);
   // pinMode(RELAY_4, OUTPUT);
-  pinMode(RELAY_5, OUTPUT);
 
-  pinMode(RELAY_10, OUTPUT);
-  pinMode(RELAY_11, OUTPUT);
-  pinMode(RELAY_12, OUTPUT);
+  pinMode(RELAY_B1, OUTPUT);
+  pinMode(RELAY_B2, OUTPUT);
 
   setup_debug();
 
@@ -116,7 +112,6 @@ void setup() {
   // Start server
   server.begin();
 }
-
 
 
 // Wait here for command or switch request from host

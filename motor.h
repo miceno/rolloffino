@@ -17,7 +17,7 @@ enum cmd_input {
 
 class Motor {
 public:
-  virtual void runCommand(int command_input, char* value);
+  virtual void runCommand(int command_input, char *value);
 
   virtual void motorOff() = 0;
 
@@ -58,6 +58,11 @@ public:
 
   void closeCommand();
   const char *getVersion();
-
 };
+
+class DRV8871 : public TA6586 {
+  const char *getVersion();
+};
+
+
 #endif
