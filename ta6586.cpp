@@ -29,8 +29,8 @@ void TA6586::checkRoofMovement() {
     // Roof is moving
     // Add some delay for complete roof opening or closure
     if ((millis() - MotionStopTime) > ROOF_MOTION_END_DELAY_MILLIS) {
-      DEBUG_INFO("Stop...");  // DEBUG
-      oledConsole->print("Stop...");
+      DEBUG_INFO("STOP");  // DEBUG
+      oledConsole->print("STOP");
       stopCommand();
       MotionStopTime = 0;
     }
@@ -39,8 +39,8 @@ void TA6586::checkRoofMovement() {
 }
 
 void TA6586::motorOff() {
-  DEBUG_INFO("Switch motor off");
-  oledConsole->print("Switch motor off");
+  DEBUG_INFO("Motor OFF");
+  oledConsole->print("Motor OFF");
   // Make sure motors are stopped
 
   // Set both to high to disable motor. 
@@ -57,9 +57,9 @@ void TA6586::motorOff() {
 }
 
 void TA6586::motorOn() {
-  DEBUG_INFO("Switch motor on");
+  DEBUG_INFO("Motor ON");
   // Make sure motors starts
-  oledConsole->print("Switch motor on");
+  oledConsole->print("Motor ON");
 }
 
 void TA6586::stopCommand() {
@@ -72,7 +72,7 @@ void TA6586::connectCommand() {
 }
 
 void TA6586::openCommand() {
-  oledConsole->print("Open");
+  oledConsole->print("OPEN");
 
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
   motorOn();                              // Activate the motor
@@ -87,7 +87,7 @@ void TA6586::openCommand() {
 }
 
 void TA6586::closeCommand() {
-  oledConsole->print("Close");
+  oledConsole->print("CLOSE");
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
   motorOn();                             // Activate the motor
   digitalWrite(FUNC_DIRECTION_A, LOW);  // Set actuator voltage leads to open actuator
