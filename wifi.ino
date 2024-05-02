@@ -122,12 +122,6 @@ void wifi_loop(Motor *m) {
   // Wait for incoming data from the INDI driver
   if (client) {
     client.flush();
-    /*
-    if (!indiData) {
-      client.flush();
-      indiData = true;
-    }
-    */
     if (client.available() > 0) {
       DEBUG_VERBOSE("available data...");  // DEBUG
       parseCommand(m);
