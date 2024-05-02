@@ -59,6 +59,12 @@
 #define FUNC_AUX 0          // Relay to turn ON or OFF observatory lights GG
 #define FUNC_BLINKER 0     // Relay to turn safety  on/off GG
 
+#define MOTOR_A_SPEED_FACTOR_OPENING 84
+#define MOTOR_A_SPEED_FACTOR_CLOSING 83
+
+#define MOTOR_B_SPEED_FACTOR_OPENING 100
+#define MOTOR_B_SPEED_FACTOR_CLOSING 100
+
 /*
  * GG
  * Delays required  1) before checking limit switches when the roof opens and

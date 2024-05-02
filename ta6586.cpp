@@ -63,13 +63,11 @@ void TA6586::connectCommand() {
 
 void TA6586::openCommand() {
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
-int speed = 84; // motor A is 16% faster than motor B for opening
-
   motorOn();                              // Activate the motor
-  analogWrite(FUNC_DIRECTION_A, map(speed, 0, 100, 0, 255));    // Set actuator voltage leads to open actuator
+  analogWrite(FUNC_DIRECTION_A, map(MOTOR_A_SPEED_FACTOR_OPENING, 0, 100, 0, 255));    // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
 
-  digitalWrite(FUNC_DIRECTION_B, HIGH);    // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_DIRECTION_B, map(MOTOR_B_SPEED_FACTOR_OPENING, 0, 100, 0, 255));    // Set actuator voltage leads to open actuator
   digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
 
   MotionStartTime = millis();
@@ -77,13 +75,12 @@ int speed = 84; // motor A is 16% faster than motor B for opening
 
 void TA6586::closeCommand() {
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
-int speed = 83; // motor A is 17% faster than motor B for closing
   motorOn();                             // Activate the motor
   digitalWrite(FUNC_DIRECTION_A, LOW);  // Set actuator voltage leads to open actuator
-  analogWrite(FUNC_ACTIVATION_A, map(speed, 0, 100, 0, 255));  // Set actuator in motion
+  analogWrite(FUNC_ACTIVATION_A, map(MOTOR_A_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));  // Set actuator in motion
 
   digitalWrite(FUNC_DIRECTION_B, LOW);  // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_ACTIVATION_B, HIGH);  // Set actuator in motion
+  digitalWrite(FUNC_ACTIVATION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));  // Set actuator in motion
 
   MotionStartTime = millis();
 }

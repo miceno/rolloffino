@@ -142,3 +142,19 @@ but the motor will still be powered. In order to reduce power, the microcontroll
 
 It might be your linear actuators are faster or slower, so adjust the value for `ROOF_MOVEMENT_MIN_TIME_MILLIS` accordingly in 
 `config.h`.
+
+## Motor speed
+
+The code drives two motors, but they might have different speeds. In the case of linear actuators, they might have
+small differences in construction that will make one of them faster than the other.
+
+This is the procedure to measure and adjust the difference in speeds:
+* Measure the time it takes both motors to open and close separately. Take several measures and calculate the average
+to have a valid metric. Say that when opening, motor A takes an average of 16s and motor B takes 18s.
+* Calculate the percentage of speed of the faster: take the difference between the average of the slowest and fastest motor, 
+and divide it by the average time of the fastest motor. For our example, the difference is 2s and the percentage is 12.5%.
+* Reduce the speed of the fastest motor: Set an appropiate percentage for faster motor 
+using variables `MOTOR_*_SPEED_FACTOR_*ING`. For our example, set `MOTOR_A_SPEED_FACTOR_OPENING` to 87.
+* Set to 100 the values for the slowest motor.
+
+You will probably need to manually adjust the value, since measuring times might not be accurate enough.
