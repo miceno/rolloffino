@@ -1,5 +1,5 @@
-#ifndef __rolloff_linear_actuator_comm__
-#define __rolloff_linear_actuator_comm__ 1
+// #ifndef __rolloff_linear_actuator_comm__
+// #define __rolloff_linear_actuator_comm__ 1
 
 void setup_serial() {
   Serial.begin(BAUD_RATE);  // Baud rate to match that in the driver
@@ -7,7 +7,7 @@ void setup_serial() {
     ;
 }
 
-void serial_loop() {
+void serial_loop(Motor *m) {
   while (Serial.available() <= 0) {
     for (int cnt = 0; cnt < 60; cnt++) {
       if (Serial.available() > 0)
@@ -16,9 +16,9 @@ void serial_loop() {
         delay(100);
     }
   }
-  parseCommand();  // Some input detected
+  parseCommand(m);  // Some input detected
 }
 
 
 
-#endif
+// #endif

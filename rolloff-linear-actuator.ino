@@ -125,7 +125,7 @@ void loop() {
   if (USE_WIFI == 1) {
     wifi_loop(motor);
   } else {
-    serial_loop();
+    serial_loop(motor);
   }
   oled_loop(oled_console);
   delay(100);
