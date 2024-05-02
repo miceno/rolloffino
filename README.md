@@ -110,30 +110,30 @@ Use the following pinout (from ESP8266 to switches), and set the corresponding v
 TA6586 is a 2-channel motor controller.
 
 Use the following pinout (from ESP8266 to motor board), and set the corresponding value on the `config.h` file:
-* D3 (GPIO0)  -> D1 motor B      -> RELAY_B1
-* D4 (GPIO2)  -> D0 motor B      -> RELAY_B2
-* D5 (GPIO14) -> D3 motor A      -> RELAY_A1
-* D6 (GPIO12) -> D2 motor A      -> RELAY_A2
+* D3 (GPIO0)  -> D0 motor A      -> RELAY_A1
+* D4 (GPIO2)  -> D1 motor A      -> RELAY_A2
+* D5 (GPIO14) -> D2 motor B      -> RELAY_B1
+* D6 (GPIO12) -> D3 motor B      -> RELAY_B2
 
 In the case of an ESP8266 with an OLED display, pins D5 and D6 are used for communication with the display, so you should 
 choose another ones:
-* D7 (GPIO13) -> D3 motor A      -> RELAY_A1
-* D8 (GPIO15) -> D2 motor A      -> RELAY_A2
+* D7 (GPIO13) -> D2 motor B      -> RELAY_B1
+* D8 (GPIO15) -> D3 motor B      -> RELAY_B2
 
 ## Pinout for DRV8871
 
 DRV8871 is a 1-channel motor controller, so the pinout is per motor board:
 
 Use the following pinout (from ESP8266 to motor board), and set the corresponding value on the `config.h` file:
-* D3 (GPIO0)  -> IN1 motor B      -> RELAY_B1
-* D4 (GPIO2)  -> IN2 motor B      -> RELAY_B2
-* D5 (GPIO14) -> IN1 motor A      -> RELAY_A1
-* D6 (GPIO12) -> IN2 motor A      -> RELAY_A2
+* D3 (GPIO0)  -> IN1 motor A      -> RELAY_A1
+* D4 (GPIO2)  -> IN2 motor A      -> RELAY_A2
+* D5 (GPIO14) -> IN1 motor B      -> RELAY_B1
+* D6 (GPIO12) -> IN2 motor B      -> RELAY_B2
 
 In the case of an ESP8266 with an OLED display, pins D5 and D6 are used for communication with the display, so you should 
 choose another ones:
-* D7 (GPIO13) -> IN1 motor A      -> RELAY_A1
-* D8 (GPIO15) -> IN2 motor A      -> RELAY_A2
+* D7 (GPIO13) -> IN1 motor B      -> RELAY_B1
+* D8 (GPIO15) -> IN2 motor B      -> RELAY_B2
 
 ## Stop motor timeout
 
