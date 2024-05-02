@@ -1,5 +1,5 @@
-#ifndef __rolloff_linear_actuator_wifi__
-#define __rolloff_linear_actuator_wifi__
+// #ifndef __rolloff_linear_actuator_wifi__
+// #define __rolloff_linear_actuator_wifi__
 
 void connectWifi() {
   // Connect to the WiFi network:
@@ -138,4 +138,4 @@ void wifi_loop(Motor *m) {
 }
 
 
-#endif
+// #endif
