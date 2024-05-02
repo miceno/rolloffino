@@ -128,6 +128,6 @@ void loop() {
     serial_loop(motor);
   }
   oled_loop(oled_console);
-  delay(100);
+  delay(50);
 }  // end routine loop
 
