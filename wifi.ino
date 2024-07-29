@@ -51,14 +51,16 @@ void setup_wifi() {
   bool res;
   // res = wm.autoConnect(); // auto generated AP name from chipid
   // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
-  res = wm.autoConnect("AProlloffino", "thisisrolloffino");  // password protected ap
+  wm.setTimeout(WIFI_PORTAL_TIMEOUT);
+  res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);  // password protected ap
 
   if (!res) {
-    DEBUG_ERROR("Failed to connect");
-    // ESP.restart();
+    DEBUG_ERROR("Failed to connect to SSID %s... restarting in %ds", wm.getWiFiSSID().c_str(), WIFI_RESTART_DELAY);
+    delay(WIFI_RESTART_DELAY*1000);
+    ESP.restart();
   } else {
     //if you get here you have connected to the WiFi
-    DEBUG_INFO("connected...yeey :)");
+    DEBUG_INFO("connected to %s yeey :)", wm.getWiFiSSID().c_str());
   }
   printWifiStatus();
   DEBUG_INFO("Network online, ready for rolloffino driver connections.");

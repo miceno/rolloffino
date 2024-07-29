@@ -6,6 +6,11 @@
 
 #define BAUD_RATE 115200  // USB connection baud rate
 
+#define WIFI_PORTAL_TIMEOUT 60  // Timeout to wait for user interaction before restarting the server
+#define WIFI_RESTART_DELAY  10  // Delay in seconds to wait before restarts when the AP is not available
+
+#include "wifi_secrets.h"
+
 // Define USE_WIFI if WiFi is to be used instead of USB to communicate with INDI driver.
 // If using WiFi and the serial monitor is to be used for diagnostic messaging in the IDE,
 // the USB must also be connected between the Arduino and the host.
