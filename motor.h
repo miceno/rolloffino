@@ -3,6 +3,7 @@
 #define __motor_h__
 
 #include "oled_console.h"
+#include <cstddef>
 
 enum cmd_input {
   CMD_NONE,
@@ -19,10 +20,12 @@ enum cmd_input {
 
 class Motor {
 public:
-  OledConsole *oledConsole;
+  OledConsole *oledConsole = NULL;
 public:
   virtual void runCommand(int command_input, char *value);
+  virtual void printOledConsole(const char *msg);
 
+  /* Pure abstract methods */
   virtual void motorOff() = 0;
 
   virtual void motorOn() = 0;

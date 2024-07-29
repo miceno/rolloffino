@@ -13,6 +13,10 @@
 // connection will be dedicated to communicating with the INDI driver.
 #define USE_WIFI 1
 
+// Define USE_OLED if OLED display is to be used instead of console to show messages.
+// If the USE_OLED line is commented out then OLED support is not built.
+#define USE_OLED 0
+
 // If there is difficulty getting the INDI roof driver to connect, need to establish that the
 // WiFi network is working and that the Arduino is connected. Running the Arduino IDE and
 // using its serial monitor can be helpful to see any diagnostic messages.

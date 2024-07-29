@@ -62,7 +62,11 @@ unsigned long MotionStartTime = 0;  // Related to ROOF_MOVEMENT_MIN_TIME_MILLIS 
 unsigned long MotionStopTime;       // Related to ROOF_MOTION_END_DELAY_MILLIS GG
 
 // Motor* motor = new TA6586();
-OledConsole *oled_console = new OledConsole(CONSOLE_POWER_TIMEOUT, CONSOLE_POWER_MODE);
+#if (USE_OLED == 1)
+OledConsole* oled_console = new OledConsole(CONSOLE_POWER_TIMEOUT, CONSOLE_POWER_MODE);
+#else
+OledConsole* oled_console = NULL;
+#endif
 Motor* motor = new TA6586();
 
 
@@ -82,9 +86,12 @@ boolean indiConnected = false;      // Driver has connected to local network
 void setup() {
   // Wait for all ports to stabilize
   delay(100);
-  motor->oledConsole = oled_console;
-  oled_setup();
-
+  if (USE_OLED == 1) {
+    motor->oledConsole = oled_console;
+    oled_setup();
+  } else {
+    Serial.println("NO OLED console");
+  }
   // Initialize the input switches
   pinMode(SWITCH_1, INPUT_PULLUP);
   pinMode(SWITCH_2, INPUT_PULLUP);
@@ -127,7 +134,8 @@ void loop() {
   } else {
     serial_loop(motor);
   }
-  oled_loop(oled_console);
+  if (USE_OLED == 1) {
+    oled_loop(oled_console);
+  }
   delay(50);
 }  // end routine loop
-

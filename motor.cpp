@@ -1,11 +1,9 @@
-
-
-// #include <ESP8266WiFi.h>
 #include "motor.h"
 #include "config.h"
 #include "Arduino_DebugUtils.h"
 #include "functions.h"
 #include "oled_console.h"
+#include <cstddef>
 
 ////////////////////////////////////////////////////////////////////////////////
 // Action command received
@@ -50,4 +48,10 @@ void Motor::runCommand(int command_input, char* value) {
       closeCommand();
       break;
   }                // switch
+}
+
+void Motor::printOledConsole(const char *msg){
+  if (this->oledConsole){
+    this->oledConsole->print(msg);
+  }
 }
