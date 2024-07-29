@@ -24,7 +24,7 @@ void printWifiStatus() {
   IPAddress ip = WiFi.localIP();
 
   // print the SSID of the network you're attached to:
-  DEBUG_INFO("\nSSID: %s, IP Address: %s, Signal (RSSI): %d dBm", ssid.c_str(), ip.toString().c_str(), rssi);
+  DEBUG_INFO("SSID: %s, IP Address: %s, Signal (RSSI): %d dBm", ssid.c_str(), ip.toString().c_str(), rssi);
 }
 
 
