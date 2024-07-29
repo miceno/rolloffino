@@ -36,17 +36,17 @@
 #include "oled_console.h"
 
 const char* VERSION_ID = "V1.3-esp-2ch-wifi-magnet-3";
-//  Maximum length of messages = 63                                               *|
-const char* ERROR1 = "The controller response message was too long";
-const char* ERROR2 = "The controller failure message was too long";
-const char* ERROR3 = "Command input request is too long";
-const char* ERROR4 = "Invalid command syntax, both start and end tokens missing";
-const char* ERROR5 = "Invalid command syntax, no start token found";
-const char* ERROR6 = "Invalid command syntax, no end token found";
-const char* ERROR7 = "Roof controller unable to parse command";
-const char* ERROR8 = "Command must map to either set a relay or get a switch";
-const char* ERROR9 = "Request not implemented in controller";
-const char* ERROR10 = "Abort command ignored, roof already stationary";
+//  Maximum length of messages = 63                                                       *|
+static const char* ERROR1 = "The controller response message was too long";
+static const char* ERROR2 = "The controller failure message was too long";
+static const char* ERROR3 = "Command input request is too long";
+static const char* ERROR4 = "Invalid command syntax, both start and end tokens missing";
+static const char* ERROR5 = "Invalid command syntax, no start token found";
+static const char* ERROR6 = "Invalid command syntax, no end token found";
+static const char* ERROR7 = "Roof controller unable to parse command";
+static const char* ERROR8 = "Command must map to either set a relay or get a switch";
+static const char* ERROR9 = "Request not implemented in controller";
+static const char* ERROR10 = "Abort command ignored, roof already stationary";
 
 
 cmd_input command_input;
