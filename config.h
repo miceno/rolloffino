@@ -6,8 +6,8 @@
 
 #define BAUD_RATE 115200  // USB connection baud rate
 
-#define WIFI_PORTAL_TIMEOUT 60  // Timeout to wait for user interaction before restarting the server
-#define WIFI_RESTART_DELAY  10  // Delay in seconds to wait before restarts when the AP is not available
+#define WIFI_PORTAL_TIMEOUT 120  // Timeout to wait for user interaction before restarting the server
+#define RESTART_DELAY 10         // Delay in seconds to wait before restarts
 
 #include "wifi_secrets.h"
 
@@ -45,8 +45,8 @@
 // #define RELAY_3 8
 // #define RELAY_4 12
 
-#define RELAY_B1 D7   // Motor B PWM
-#define RELAY_B2 D8   // Motor B direction
+#define RELAY_B1 D7  // Motor B PWM
+#define RELAY_B2 D8  // Motor B direction
 
 // Indirection to define a functional name in terms of a switch
 // Use 0 if switch not implemented
@@ -60,13 +60,13 @@
 #define FUNC_ACTIVATION 100  // Activation relay connected to the direction relay GG
 #define FUNC_STOP 200        // FUNC_STOP (abort) needs only to operate activation relay GG
 
-#define FUNC_ACTIVATION_A RELAY_A1   // Activation relay connected to the direction relay GG
-#define FUNC_DIRECTION_A RELAY_A2    // Direction relay inverts the power for either actuator extension or retraction GG
+#define FUNC_ACTIVATION_A RELAY_A1  // Activation relay connected to the direction relay GG
+#define FUNC_DIRECTION_A RELAY_A2   // Direction relay inverts the power for either actuator extension or retraction GG
 #define FUNC_ACTIVATION_B RELAY_B1  // Activation relay connected to the direction relay GG
 #define FUNC_DIRECTION_B RELAY_B2   // Direction relay inverts the power for either actuator extension or retraction GG
-#define FUNC_LOCK 0              // If automated roof lock is available.
-#define FUNC_AUX 0          // Relay to turn ON or OFF observatory lights GG
-#define FUNC_BLINKER 0     // Relay to turn safety  on/off GG
+#define FUNC_LOCK 0                 // If automated roof lock is available.
+#define FUNC_AUX 0                  // Relay to turn ON or OFF observatory lights GG
+#define FUNC_BLINKER 0              // Relay to turn safety  on/off GG
 
 #define MOTOR_A_SPEED_FACTOR_OPENING 100
 #define MOTOR_A_SPEED_FACTOR_CLOSING 100

@@ -24,7 +24,7 @@ void connectWifi() {
 }
 
 void restart(void) {
-  delay(WIFI_RESTART_DELAY * 1000);
+  delay(RESTART_DELAY * 1000);
   ESP.restart();
 }
 
@@ -67,7 +67,7 @@ void setup_wifi() {
   res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);  // password protected ap
 
   if (!res) {
-    DEBUG_ERROR("Failed to connect to SSID %s... restarting in %ds", wm.getWiFiSSID().c_str(), WIFI_RESTART_DELAY);
+    DEBUG_ERROR("Failed to connect to SSID %s... restarting in %ds", wm.getWiFiSSID().c_str(), RESTART_DELAY);
     restart();
   } else {
     //if you get here you have connected to the WiFi
