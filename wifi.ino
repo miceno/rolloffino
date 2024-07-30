@@ -1,5 +1,6 @@
 // #ifndef __rolloff_linear_actuator_wifi__
 // #define __rolloff_linear_actuator_wifi__
+#include <ESP8266mDNS.h>
 
 void connectWifi() {
   // Connect to the WiFi network:
@@ -47,10 +48,12 @@ void setup_wifi() {
 
   //WiFiManager, Local intialization. Once its business is done, there is no need to keep it around
   WiFiManager wm;
+  wm.setHostname("rolloffino");
+  MDNS.update();
 
   // reset settings - wipe stored credentials for testing
   // these are stored by the esp library
-  // wm.resetSettings();
+  //wm.resetSettings();
 
   // Automatically connect using saved credentials,
   // if connection fails, it starts an access point with the specified name ( "AutoConnectAP"),
