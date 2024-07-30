@@ -9,13 +9,22 @@ void connectWifi() {
     // wait up to 20 seconds to establish the connection
     for (int i = 0; i < 20; i++) {
       delay(1000);
+      WiFi.reconnect();
       if (WiFi.status() == WL_CONNECTED)
         return;
       DEBUG_INFO(".");
     }
-    DEBUG_INFO("Failed to connect to the current configured network.\n"
-               "Unable to continue without a WiFi network.");
+    DEBUG_INFO("Failed to connect to '%s' network.\n"
+               "Unable to continue without a WiFi network.",
+               WiFi.SSID());
+
+    restart();
   }
+}
+
+void restart(void) {
+  delay(WIFI_RESTART_DELAY * 1000);
+  ESP.restart();
 }
 
 void printWifiStatus() {
@@ -56,8 +65,7 @@ void setup_wifi() {
 
   if (!res) {
     DEBUG_ERROR("Failed to connect to SSID %s... restarting in %ds", wm.getWiFiSSID().c_str(), WIFI_RESTART_DELAY);
-    delay(WIFI_RESTART_DELAY*1000);
-    ESP.restart();
+    restart();
   } else {
     //if you get here you have connected to the WiFi
     DEBUG_INFO("connected to %s yeey :)", wm.getWiFiSSID().c_str());
@@ -76,15 +84,15 @@ void reconnectWifi() {
   if (client) {
     client.stop();
   }
-  WiFi.disconnect();
-  WiFi.config(ip, gw, subnet);  // Use a fixed WiFi address for the Arduino
+  // WiFi.disconnect();
+  // WiFi.config(ip, gw, subnet);  // Use a fixed WiFi address for the Arduino
   connectWifi();
   server.begin();  // Start listening
   printWifiStatus();
 }
 
-void reconnect_wifi_helper(){
-    // Check still connected to the wifi network
+void reconnect_wifi_helper() {
+  // Check still connected to the wifi network
   DEBUG_VERBOSE("wifi loop");  // DEBUG
   int wifi_status = WiFi.status();
   DEBUG_VERBOSE("wifi status: %d", wifi_status);  // DEBUG
@@ -94,7 +102,7 @@ void reconnect_wifi_helper(){
   }
 }
 
-WiFiClient get_wifi_client(WiFiClient client){  
+WiFiClient get_wifi_client(WiFiClient client) {
   if (!client) {
     client = server.available();
   }
