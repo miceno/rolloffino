@@ -5,10 +5,10 @@
 void connectWifi() {
   // Connect to the WiFi network:
   while (WiFi.status() != WL_CONNECTED) {
-    DEBUG_INFO("Attempting to connect to the network ");
+    DEBUG_INFO("Attempting to connect to network '%s'", WiFi.SSID());
 
-    // wait up to 20 seconds to establish the connection
-    for (int i = 0; i < 20; i++) {
+    // wait to establish the connection
+    for (int i = 0; i < WIFI_MAX_RETRIES; i++) {
       delay(1000);
       WiFi.reconnect();
       if (WiFi.status() == WL_CONNECTED)
@@ -63,7 +63,9 @@ void setup_wifi() {
   bool res;
   // res = wm.autoConnect(); // auto generated AP name from chipid
   // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
-  wm.setTimeout(WIFI_PORTAL_TIMEOUT);
+  wm.setWiFiAutoReconnect(true);
+  wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
+  wm.setConnectTimeout(WIFI_CONNECTION_TIMEOUT);
   res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);  // password protected ap
 
   if (!res) {

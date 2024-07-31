@@ -6,8 +6,10 @@
 
 #define BAUD_RATE 115200  // USB connection baud rate
 
-#define WIFI_PORTAL_TIMEOUT 120  // Timeout to wait for user interaction before restarting the server
-#define RESTART_DELAY 10         // Delay in seconds to wait before restarts
+#define WIFI_PORTAL_TIMEOUT 60      // Timeout to wait for user interaction before restarting the server
+#define WIFI_CONNECTION_TIMEOUT 15  // Timeout to wait for connection to AP
+#define WIFI_MAX_RETRIES 10         // Max retries connecting to wifi
+#define RESTART_DELAY 10            // Delay in seconds to wait before restarts
 
 #include "wifi_secrets.h"
 
