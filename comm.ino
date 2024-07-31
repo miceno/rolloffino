@@ -5,6 +5,7 @@ void setup_serial() {
   Serial.begin(BAUD_RATE);  // Baud rate to match that in the driver
   while (!Serial)
     ;
+  Serial.println();
 }
 
 void serial_loop(Motor *m) {
