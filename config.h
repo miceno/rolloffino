@@ -2,9 +2,8 @@
 #define __rolloff_linear_actuator_config_h__ 1
 
 
-#define DEFAULT_LOG_LEVEL DBG_INFO
-
-#define BAUD_RATE 115200  // USB connection baud rate
+#define BAUD_RATE 74880             // USB connection baud rate
+#define DEFAULT_LOG_LEVEL DBG_INFO  // Default log level
 
 #define WIFI_PORTAL_TIMEOUT 60      // Timeout to wait for user interaction before restarting the server
 #define WIFI_CONNECTION_TIMEOUT 15  // Timeout to wait for connection to AP
