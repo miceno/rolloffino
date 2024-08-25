@@ -33,7 +33,6 @@
 #include "config.h"
 #include "motor.h"
 #include "functions.h"
-#include "oled_console.h"
 
 const char* VERSION_ID = "V1.4-esp-2ch-wifi-magnet-3";
 //  Maximum length of messages = 63                                                       *|
@@ -61,12 +60,6 @@ char value[vLen + 1];
 unsigned long MotionStartTime = 0;  // Related to ROOF_MOVEMENT_MIN_TIME_MILLIS GG
 unsigned long MotionStopTime;       // Related to ROOF_MOTION_END_DELAY_MILLIS GG
 
-// Motor* motor = new TA6586();
-#if (USE_OLED == 1)
-OledConsole* oled_console = new OledConsole(CONSOLE_POWER_TIMEOUT, CONSOLE_POWER_MODE);
-#else
-OledConsole* oled_console = NULL;
-#endif
 Motor* motor = new TA6586();
 
 
@@ -84,14 +77,9 @@ boolean indiConnected = false;      // Driver has connected to local network
  * One time initialization
  */
 void setup() {
-  // Wait for all ports to stabilize
-  delay(100);
-  if (USE_OLED == 1) {
-    motor->oledConsole = oled_console;
-    oled_setup();
-  } else {
-    Serial.println("NO OLED console");
-  }
+  // Establish USB port.
+  setup_serial();
+
   // Initialize the input switches
   pinMode(SWITCH_1, INPUT_PULLUP);
   pinMode(SWITCH_2, INPUT_PULLUP);
@@ -109,9 +97,6 @@ void setup() {
   pinMode(RELAY_B2, OUTPUT);
 
   setup_debug();
-
-  // Establish USB port.
-  setup_serial();
 
   if (USE_WIFI == 1) {
     setup_wifi();
@@ -134,8 +119,5 @@ void loop() {
   } else {
     serial_loop(motor);
   }
-  if (USE_OLED == 1) {
-    oled_loop(oled_console);
-  }
-  delay(50);
+  delay(1);
 }  // end routine loop

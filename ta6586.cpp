@@ -6,7 +6,6 @@
 #include "config.h"
 #include "Arduino_DebugUtils.h"
 #include "functions.h"
-#include "oled_console.h"
 
 const char* TA6586_VERSION_ID = "V1.3-esp-wifi-magnet-ta6586";
 
@@ -30,7 +29,6 @@ void TA6586::checkRoofMovement() {
     // Add some delay for complete roof opening or closure
     if ((millis() - MotionStopTime) > ROOF_MOTION_END_DELAY_MILLIS) {
       DEBUG_INFO("STOP");  // DEBUG
-      this->printOledConsole("STOP");
       stopCommand();
       MotionStopTime = 0;
     }
@@ -40,7 +38,6 @@ void TA6586::checkRoofMovement() {
 
 void TA6586::motorOff() {
   DEBUG_INFO("Motor OFF");
-  this->printOledConsole("Motor OFF");
   // Make sure motors are stopped
 
   // Set both to high to disable motor. 
@@ -58,8 +55,6 @@ void TA6586::motorOff() {
 
 void TA6586::motorOn() {
   DEBUG_INFO("Motor ON");
-  // Make sure motors starts
-  this->printOledConsole("Motor ON");
 }
 
 void TA6586::stopCommand() {
@@ -72,7 +67,7 @@ void TA6586::connectCommand() {
 }
 
 void TA6586::openCommand() {
-  this->printOledConsole("OPEN");
+  DEBUG_INFO("OPEN");
 
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
   motorOn();                              // Activate the motor
@@ -87,7 +82,7 @@ void TA6586::openCommand() {
 }
 
 void TA6586::closeCommand() {
-  this->printOledConsole("CLOSE");
+  DEBUG_INFO("CLOSE");
   // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
   motorOn();                             // Activate the motor
   digitalWrite(FUNC_DIRECTION_A, LOW);  // Set actuator voltage leads to open actuator

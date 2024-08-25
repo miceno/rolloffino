@@ -16,7 +16,7 @@ void connectWifi() {
       DEBUG_INFO(".");
     }
     DEBUG_INFO("Failed to connect to '%s' network.\n"
-               "Unable to continue without a WiFi network.",
+               "Unable to continue without a WiFi network. Restarting...",
                WiFi.SSID());
 
     restart();

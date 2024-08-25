@@ -114,9 +114,6 @@ Use the following pinout (from ESP8266 to motor board), and set the correspondin
 * D4 (GPIO2)  -> D1 motor A      -> RELAY_A2
 * D5 (GPIO14) -> D2 motor B      -> RELAY_B1
 * D6 (GPIO12) -> D3 motor B      -> RELAY_B2
-
-In the case of an ESP8266 with an OLED display, pins D5 and D6 are used for communication with the display, so you should 
-choose another ones:
 * D7 (GPIO13) -> D2 motor B      -> RELAY_B1
 * D8 (GPIO15) -> D3 motor B      -> RELAY_B2
 
@@ -129,9 +126,6 @@ Use the following pinout (from ESP8266 to motor board), and set the correspondin
 * D4 (GPIO2)  -> IN2 motor A      -> RELAY_A2
 * D5 (GPIO14) -> IN1 motor B      -> RELAY_B1
 * D6 (GPIO12) -> IN2 motor B      -> RELAY_B2
-
-In the case of an ESP8266 with an OLED display, pins D5 and D6 are used for communication with the display, so you should 
-choose another ones:
 * D7 (GPIO13) -> IN1 motor B      -> RELAY_B1
 * D8 (GPIO15) -> IN2 motor B      -> RELAY_B2
 
