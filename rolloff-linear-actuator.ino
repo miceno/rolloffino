@@ -27,7 +27,6 @@
 
 
 #include <ESP8266WiFi.h>
-#include <WiFiManager.h>  // https://github.com/tzapu/WiFiManager
 #include "Arduino_DebugUtils.h"
 
 #include "config.h"

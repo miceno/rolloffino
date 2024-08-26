@@ -2,6 +2,7 @@
 // #define __rolloff_linear_actuator_wifi__
 #include <ESP8266mDNS.h>
 #include <DoubleResetDetector.h>
+#include <WiFiManager.h>
 
 // Number of seconds after reset during which a
 // subseqent reset will be considered a double reset.
@@ -11,28 +12,9 @@
 #define DRD_ADDRESS 0
 
 DoubleResetDetector drd(DRD_TIMEOUT, DRD_ADDRESS);
+WiFiManager wm;
+unsigned int startTime = millis();
 
-
-void connectWifi() {
-  // Connect to the WiFi network:
-  while (WiFi.status() != WL_CONNECTED) {
-    DEBUG_INFO("Attempting to connect to network '%s'", WiFi.SSID());
-
-    // wait to establish the connection
-    for (int i = 0; i < WIFI_MAX_RETRIES; i++) {
-      delay(1000);
-      WiFi.reconnect();
-      if (WiFi.status() == WL_CONNECTED)
-        return;
-      DEBUG_INFO(".");
-    }
-    DEBUG_INFO("Failed to connect to '%s' network.\n"
-               "Unable to continue without a WiFi network. Restarting...",
-               WiFi.SSID());
-
-    restart();
-  }
-}
 
 void restart(void) {
   delay(RESTART_DELAY * 1000);
@@ -48,6 +30,17 @@ void printWifiStatus() {
   DEBUG_INFO("SSID: %s, IP Address: %s, Signal (RSSI): %d dBm", ssid.c_str(), ip.toString().c_str(), rssi);
 }
 
+void startConfigPortal(void) {
+  // Start configuration portal non blocking, so we can use rolloffino anyway.
+  wm.setConfigPortalBlocking(false);
+
+  DEBUG_INFO("Starting configuration portal with SSID %s (timeout %d seconds).", WIFI_DEFAULT_AP_SSID, WIFI_PORTAL_TIMEOUT);
+
+  if (!wm.startConfigPortal(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET)) {
+    DEBUG_DEBUG("Portal is already running");
+  }
+  startTime = millis();
+}
 
 void setup_wifi() {
   delay(INIT_DELAY_SECS * 1000);  // diagnostic, allow time to get serial monitor displayed
@@ -57,58 +50,40 @@ void setup_wifi() {
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
   //WiFiManager, Local intialization. Once its business is done, there is no need to keep it around
-  WiFiManager wm;
   wm.setHostname("rolloffino");
   MDNS.begin("rolloffino");
-
-  // reset settings - wipe stored credentials for testing
-  // these are stored by the esp library
-  //wm.resetSettings();
-
-  // Automatically connect using saved credentials,
-  // if connection fails, it starts an access point with the specified name ( "AutoConnectAP"),
-  // if empty will auto generate SSID, if password is blank it will be anonymous AP (wm.autoConnect())
-  // then goes into a blocking loop awaiting configuration and will return success result
+  wm.setConfigPortalBlocking(false);
+  // set configportal timeout
+  // wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
 
   bool res;
   if (drd.detectDoubleReset()) {
+    DEBUG_INFO("Double Reset detected. Starting configuration portal on %s...", WIFI_DEFAULT_AP_SSID);
 
-    //reset settings - for testing
-    //wm.resetSettings();
-
-    // set configportal timeout
-    wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
-
-    Serial.printf("Double Reset detected. Starting configuration portal on %s...\n", WIFI_DEFAULT_AP_SSID);
-    if (!wm.startConfigPortal(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET)) {
-      Serial.println("failed to connect and hit timeout");
-      restart();
-    }
-
-    //if you get here you have connected to the WiFi
-    Serial.println("connected...yeey :)");
-
+    startConfigPortal();
   } else {
-    // res = wm.autoConnect(); // auto generated AP name from chipid
-    // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
+    DEBUG_DEBUG("Connecting to last configured AP");
+
+    // wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
     wm.setWiFiAutoReconnect(true);
-    wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
     wm.setConnectTimeout(WIFI_CONNECTION_TIMEOUT);
     res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);  // password protected ap
 
     if (!res) {
       DEBUG_ERROR("Failed to connect to SSID %s... restarting in %ds", wm.getWiFiSSID().c_str(), RESTART_DELAY);
-      restart();
+      // restart();
+      startConfigPortal();
     } else {
       //if you get here you have connected to the WiFi
       DEBUG_INFO("connected to %s yeey :)", wm.getWiFiSSID().c_str());
+      connectWifi();
     }
-    printWifiStatus();
     DEBUG_INFO("Network online, ready for rolloffino driver connections.");
   }
 }
 
-void reconnectWifi() {
+
+void connectWifi() {
   DEBUG_VERBOSE("not connected");  // DEBUG
   // if (indiConnected || indiData)
   if (indiConnected) {
@@ -118,13 +93,10 @@ void reconnectWifi() {
   if (client) {
     client.stop();
   }
-  // WiFi.disconnect();
-  // WiFi.config(ip, gw, subnet);  // Use a fixed WiFi address for the Arduino
-  connectWifi();
   server.begin();  // Start listening
   printWifiStatus();
 }
-
+/*
 void reconnect_wifi_helper() {
   // Check still connected to the wifi network
   DEBUG_VERBOSE("wifi loop");  // DEBUG
@@ -135,7 +107,7 @@ void reconnect_wifi_helper() {
     reconnectWifi();
   }
 }
-
+*/
 WiFiClient get_wifi_client(WiFiClient client) {
   if (!client) {
     client = server.available();
@@ -163,7 +135,19 @@ void wifi_loop(Motor *m) {
   MDNS.update();
   MDNS.addService("rolloffino", "tcp", 8888);
 
-  reconnect_wifi_helper();
+  // Process WiFiManager config portal
+  wm.process();
+  // check for timeout
+  if ((millis() - startTime) > (WIFI_PORTAL_TIMEOUT * 1000)) {
+    DEBUG_INFO("Portal timeout after %d seconds...", WIFI_PORTAL_TIMEOUT);
+    if (wm.getConfigPortalActive()) {
+      DEBUG_INFO("Config portal is active... restarting...");
+      restart();
+    }else{
+      DEBUG_INFO("Config portal is not active... continue...");
+      startTime = millis();
+    }
+  }
 
   client = get_wifi_client(client);
   // Wait for incoming data from the INDI driver
