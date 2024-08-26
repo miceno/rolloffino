@@ -2,7 +2,6 @@
 #include "config.h"
 #include "Arduino_DebugUtils.h"
 #include "functions.h"
-#include "oled_console.h"
 #include <cstddef>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -48,10 +47,4 @@ void Motor::runCommand(int command_input, char* value) {
       closeCommand();
       break;
   }                // switch
-}
-
-void Motor::printOledConsole(const char *msg){
-  if (this->oledConsole){
-    this->oledConsole->print(msg);
-  }
 }
