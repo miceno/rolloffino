@@ -8,7 +8,7 @@
 #define WIFI_PORTAL_TIMEOUT 90      // Timeout to wait for user interaction before restarting the server
 #define WIFI_CONNECTION_TIMEOUT 15  // Timeout to wait for connection to AP
 #define WIFI_MAX_RETRIES 10         // Max retries connecting to wifi
-#define RESTART_DELAY 5           // Delay in seconds to wait before restarts
+#define RESTART_DELAY 5             // Delay in seconds to wait before restarts
 
 #include "wifi_secrets.h"
 
@@ -83,7 +83,7 @@
 #define ROOF_MOTION_END_DELAY_MILLIS 5000
 
 // Buffer limits
-#define INTERNET_PORT 8888             // Listen on telnet port, match in INDI driver tab
+#define INTERNET_PORT 8888  // Listen on telnet port, match in INDI driver tab
 #define MAX_INPUT_TEXT 45
 #define MAX_RESPONSE_TEXT 127
 #define MAX_MESSAGE_TEXT 63

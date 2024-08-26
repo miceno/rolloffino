@@ -41,9 +41,11 @@ void startConfigPortal(void) {
 }
 
 void setup_wifi() {
-  delay(INIT_DELAY_SECS * 1000);  // diagnostic, allow time to get serial monitor displayed
+  // diagnostic, allow time to get serial monitor displayed
+  delay(INIT_DELAY_SECS * 1000);
   // it is a good practice to make sure your code sets wifi mode how you want it.
-  WiFi.mode(WIFI_STA);  // explicitly set mode, esp defaults to STA+AP
+  // explicitly set mode, esp defaults to STA+AP
+  WiFi.mode(WIFI_STA);
   WiFi.forceSleepWake();
   WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
@@ -65,7 +67,8 @@ void setup_wifi() {
     // wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
     wm.setWiFiAutoReconnect(true);
     wm.setConnectTimeout(WIFI_CONNECTION_TIMEOUT);
-    res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);  // password protected ap
+    // password protected ap
+    res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);
 
     if (!res) {
       DEBUG_ERROR("Failed to connect to SSID %s... restarting in %ds", wm.getWiFiSSID().c_str(), RESTART_DELAY);
@@ -82,8 +85,7 @@ void setup_wifi() {
 
 
 void connectWifi() {
-  DEBUG_VERBOSE("not connected");  // DEBUG
-  // if (indiConnected || indiData)
+  DEBUG_VERBOSE("not connected");
   if (indiConnected) {
     DEBUG_INFO("Lost the WiFi connection");
   }
@@ -91,40 +93,30 @@ void connectWifi() {
   if (client) {
     client.stop();
   }
-  server.begin();  // Start listening
+  // Start listening
+  server.begin();
   printWifiStatus();
 }
-/*
-void reconnect_wifi_helper() {
-  // Check still connected to the wifi network
-  DEBUG_VERBOSE("wifi loop");  // DEBUG
-  int wifi_status = WiFi.status();
-  DEBUG_VERBOSE("wifi status: %d", wifi_status);  // DEBUG
-  if (wifi_status != WL_CONNECTED) {
-    DEBUG_VERBOSE("reconnecting...");  // DEBUG
-    reconnectWifi();
-  }
-}
-*/
+
 WiFiClient get_wifi_client(WiFiClient client) {
   if (!client) {
     client = server.available();
   }
   if (client.connected()) {
-    DEBUG_VERBOSE("client.connected");  // DEBUG
+    DEBUG_VERBOSE("client.connected");
     if (!indiConnected) {
       indiConnected = true;
       // indiData = false;
       DEBUG_INFO("rolloffino driver connected");
     }
   } else {
-    DEBUG_VERBOSE("NOT client.connected");  // DEBUG
+    DEBUG_VERBOSE("NOT client.connected");
     if (indiConnected) {
       indiConnected = false;
       DEBUG_INFO("rolloffino driver disconnected");
     }
   }
-  DEBUG_VERBOSE("after client.connected checks");  // DEBUG
+  DEBUG_VERBOSE("after client.connected checks");
 
   return client;
 }
@@ -141,7 +133,7 @@ void wifi_loop(Motor *m) {
     if (wm.getConfigPortalActive()) {
       DEBUG_INFO("Config portal is active... restarting...");
       restart();
-    }else{
+    } else {
       DEBUG_INFO("Config portal is not active... continue...");
       startTime = millis();
     }
@@ -152,11 +144,11 @@ void wifi_loop(Motor *m) {
   if (client) {
     client.flush();
     if (client.available() > 0) {
-      DEBUG_VERBOSE("available data...");  // DEBUG
+      DEBUG_VERBOSE("available data...");
       parseCommand(m);
     }
   } else {
-    DEBUG_VERBOSE("No data available. Sleeping...");  // DEBUG
+    DEBUG_VERBOSE("No data available. Sleeping...");
   }
 }
 

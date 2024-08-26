@@ -19,7 +19,7 @@ void TA6586::checkRoofMovement() {
     if (MotionStartTime != 0) {
       if ((millis() - MotionStartTime) > ROOF_MOVEMENT_MIN_TIME_MILLIS) {
         if (isSwitchOn(SWITCH_OPENED) || isSwitchOn(SWITCH_CLOSED)) {
-          DEBUG_INFO("Sensors say roof is open or closed: it is not moving...");  // DEBUG
+          DEBUG_INFO("Sensors say roof is open or closed: it is not moving...");
         }
         MotionStopTime = millis();
       }
@@ -28,7 +28,7 @@ void TA6586::checkRoofMovement() {
     // Roof is moving
     // Add some delay for complete roof opening or closure
     if ((millis() - MotionStopTime) > ROOF_MOTION_END_DELAY_MILLIS) {
-      DEBUG_INFO("STOP");  // DEBUG
+      DEBUG_INFO("STOP");
       stopCommand();
       MotionStopTime = 0;
     }
@@ -40,11 +40,11 @@ void TA6586::motorOff() {
   DEBUG_INFO("Motor OFF");
   // Make sure motors are stopped
 
-  // Set both to high to disable motor. 
+  // Set both to high to disable motor.
   // HIGH means also that LED_BUILTIN will also switch off in case we are using
   // LED_BUILTIN for the motor.
-  digitalWrite(FUNC_DIRECTION_A, HIGH);   
-  digitalWrite(FUNC_ACTIVATION_A, HIGH);  
+  digitalWrite(FUNC_DIRECTION_A, HIGH);
+  digitalWrite(FUNC_ACTIVATION_A, HIGH);
 
   // Set both to high to disable motor.
   digitalWrite(FUNC_DIRECTION_B, HIGH);
@@ -69,13 +69,22 @@ void TA6586::connectCommand() {
 void TA6586::openCommand() {
   DEBUG_INFO("OPEN");
 
-  // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when opening roof
-  motorOn();                              // Activate the motor
-  analogWrite(FUNC_DIRECTION_A, map(MOTOR_A_SPEED_FACTOR_OPENING, 0, 100, 0, 255));    // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_ACTIVATION_A, LOW);  // Set actuator in motion
+  // Blink when opening roof
+  // digitalWrite(FUNC_BLINKER, HIGH);
 
-  digitalWrite(FUNC_DIRECTION_B, map(MOTOR_B_SPEED_FACTOR_OPENING, 0, 100, 0, 255));    // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_ACTIVATION_B, LOW);  // Set actuator in motion
+  // Activate the motor
+  motorOn();
+
+  // Set actuator voltage leads to open actuator
+  // Use PWM to allow different speeds on each motor.
+  analogWrite(FUNC_DIRECTION_A, map(MOTOR_A_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
+  // Set actuator in motion
+  digitalWrite(FUNC_ACTIVATION_A, LOW);
+
+  // Use PWM to allow different speeds on each motor.
+  analogWrite(FUNC_DIRECTION_B, map(MOTOR_B_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
+  // Set actuator in motion
+  digitalWrite(FUNC_ACTIVATION_B, LOW);
 
   MotionStartTime = millis();
   MotionStopTime = 0;
@@ -83,13 +92,19 @@ void TA6586::openCommand() {
 
 void TA6586::closeCommand() {
   DEBUG_INFO("CLOSE");
-  // digitalWrite(FUNC_BLINKER, HIGH);  // Blink when closing roof
-  motorOn();                             // Activate the motor
-  digitalWrite(FUNC_DIRECTION_A, LOW);  // Set actuator voltage leads to open actuator
-  analogWrite(FUNC_ACTIVATION_A, map(MOTOR_A_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));  // Set actuator in motion
+  // Blink when closing roof
+  // digitalWrite(FUNC_BLINKER, HIGH);
+  // Activate the motor
+  motorOn();
+  // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_DIRECTION_A, LOW);
+  // Use PWM to allow different speeds on each motor.
+  analogWrite(FUNC_ACTIVATION_A, map(MOTOR_A_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
 
-  digitalWrite(FUNC_DIRECTION_B, LOW);  // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_ACTIVATION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));  // Set actuator in motion
+  // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_DIRECTION_B, LOW);
+  // Use PWM to allow different speeds on each motor.
+  analogWrite(FUNC_ACTIVATION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
 
   MotionStartTime = millis();
   MotionStopTime = 0;

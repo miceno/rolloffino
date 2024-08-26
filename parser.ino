@@ -31,7 +31,7 @@ Set a relay     (SET:CLOSE:ON|OFF) >
 
 void sendAck(char* val) {
   char response[MAX_RESPONSE_TEXT];
-  DEBUG_INFO("ACK=%s", val);  // DEBUG
+  DEBUG_INFO("ACK=%s", val);
   if (strlen(val) > MAX_MESSAGE_TEXT) {
     strncpy(response, val, MAX_MESSAGE_TEXT - 3);
     strcpy(&response[MAX_MESSAGE_TEXT - 3], "...");
@@ -44,7 +44,7 @@ void sendAck(char* val) {
     strcat(response, val);
     strcat(response, ")");
     if (USE_WIFI == 1) {
-      DEBUG_VERBOSE("about to send response: %s", response);  // DEBUG
+      DEBUG_VERBOSE("about to send response: %s", response);
       client.println(response);
       client.flush();
     } else {
@@ -56,7 +56,7 @@ void sendAck(char* val) {
 
 void sendNak(const char* errorMsg) {
   char buffer[MAX_RESPONSE_TEXT];
-  DEBUG_INFO("NACK=%s", errorMsg);  // DEBUG
+  DEBUG_INFO("NACK=%s", errorMsg);
   if (strlen(errorMsg) > MAX_MESSAGE_TEXT) {
     strncpy(buffer, errorMsg, MAX_MESSAGE_TEXT - 3);
     strcpy(&buffer[MAX_MESSAGE_TEXT - 3], "...");
@@ -84,9 +84,9 @@ int read_data(char* inpBuf, int offset) {
   if (USE_WIFI == 1) {
     if (client.available() > 0) {
       recv_count = client.read((unsigned char*)inpBuf + offset, 1);
-      DEBUG_DEBUG("Reading data: %d '%s'", recv_count, inpBuf);  // DEBUG
+      DEBUG_DEBUG("Reading data: %d '%s'", recv_count, inpBuf);
     } else {
-      DEBUG_VERBOSE("read data no data available");  // DEBUG
+      DEBUG_VERBOSE("read data no data available");
     }
   } else {
     if (Serial.available() > 0) {
@@ -144,7 +144,7 @@ bool receiveCommand()  // (command:target:value)
     wait++;
     // delay(100);
   }
-  DEBUG_INFO("Received command=%s", inpBuf);  // DEBUG
+  DEBUG_INFO("Received command=%s", inpBuf);
 
   if (!start || !eof) {
     if (!start && !eof) {
@@ -160,7 +160,7 @@ bool receiveCommand()  // (command:target:value)
     safeStrTok(NULL, ":", target);
     safeStrTok(NULL, ")", value);
     if ((strlen(command) >= 3) && (strlen(target) >= 1) && (strlen(value) >= 1)) {
-      DEBUG_INFO("cmd=%s, t=%s, v=%s", command, target, value);  // DEBUG
+      DEBUG_INFO("cmd=%s, t=%s, v=%s", command, target, value);
       return true;
     } else {
       sendNak(ERROR7);
@@ -187,10 +187,10 @@ bool is_data_available() {
  * negative acknowledgement with message for any errors found.  Dispatch to commandReceived
  * or requestReceived routines to activate the command or get the requested switch state
  */
-void parseCommand(Motor *m) {
+void parseCommand(Motor* m) {
   // Confirm there is input available, read and parse it.
   if (is_data_available()) {
-    DEBUG_VERBOSE("Data is available");  // DEBUG
+    DEBUG_VERBOSE("Data is available");
     if (receiveCommand()) {
       unsigned long timeNow = millis();
       int relay = -1;  // -1 = not found, 0 = not implemented, pin number = supported
@@ -277,8 +277,8 @@ void parseCommand(Motor *m) {
 
         // Command or Request not implemented
         else if ((relay == 0 || relay == -1) && (sw == 0 || sw == -1)) {
-          DEBUG_ERROR("Command or request not implemented");  // DEBUG
-          strcpy(value, "OFF");                               // Request Not implemented
+          DEBUG_ERROR("Command or request not implemented");
+          strcpy(value, "OFF");  // Request Not implemented
           //sendNak(ERROR9);
           sendAck(value);
         }
@@ -297,7 +297,7 @@ void parseCommand(Motor *m) {
         // A state request was received
         else if (sw > 0)  // Get switch response
         {
-          DEBUG_VERBOSE("about to get Status");  // DEBUG
+          DEBUG_VERBOSE("about to get Status");
           getSwitch(sw, value);
           sendAck(value);  // Send result of reading pin associated with "target"
         }
@@ -305,7 +305,7 @@ void parseCommand(Motor *m) {
     }    // end command parsed
   }      // end input found
   else {
-    DEBUG_DEBUG("No data available. Continue...");  // DEBUG
+    DEBUG_DEBUG("No data available. Continue...");
   }
 }
 

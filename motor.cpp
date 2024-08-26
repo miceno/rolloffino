@@ -19,7 +19,7 @@
 //
 //
 void Motor::runCommand(int command_input, char* value) {
-  DEBUG_DEBUG("runCommand %d, %s", command_input, value);  // DEBUG
+  DEBUG_DEBUG("runCommand %d, %s", command_input, value);
 
   switch (command_input) {
     case CMD_STOP:
@@ -46,5 +46,5 @@ void Motor::runCommand(int command_input, char* value) {
     case CMD_CLOSE:
       closeCommand();
       break;
-  }                // switch
+  }  // switch
 }

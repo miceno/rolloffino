@@ -55,21 +55,21 @@ char command[cLen + 1];
 char target[tLen + 1];
 char value[vLen + 1];
 
-unsigned long MotionStartTime = 0;  // Related to ROOF_MOVEMENT_MIN_TIME_MILLIS GG
-unsigned long MotionStopTime;       // Related to ROOF_MOTION_END_DELAY_MILLIS GG
+// Related to ROOF_MOVEMENT_MIN_TIME_MILLIS GG
+unsigned long MotionStartTime = 0;
+// Related to ROOF_MOTION_END_DELAY_MILLIS GG
+unsigned long MotionStopTime;
 
 Motor* motor = new TA6586();
 
-/*
-IPAddress ip(INTERNET_ADDR);       // AP local Internet address
-IPAddress gw(GATEWAY_ADDR);        // AP gateway address
-IPAddress subnet(SUBNET_ADDR);     // AP subnet address
-*/
-WiFiServer server(INTERNET_PORT);  // Arduino server listening for connections on port specified
+// Arduino server listening for connections on port specified
+WiFiServer server(INTERNET_PORT);
 
-WiFiClient client;                 // Connection to return data back to the indi driver
+// Connection to return data back to the indi driver
+WiFiClient client;
 
-boolean indiConnected = false;      // Driver has connected to local network
+// Driver has connected to local network
+boolean indiConnected = false;
 
 /*
  * One time initialization
@@ -79,7 +79,7 @@ void setup() {
   // TODO: Store date on RTC memory
   // TODO: Connect to telemetry to say "HELLO!"
 
-  // Establish USB port.
+  // Establish serial port.
   setup_serial();
 
   // Initialize the input switches
@@ -89,7 +89,7 @@ void setup() {
   // pinMode(SWITCH_4, INPUT_PULLUP);
 
   // Initialize the relays
-  //Pin Setups
+  // Pin Setups
   pinMode(RELAY_A1, OUTPUT);
   pinMode(RELAY_A2, OUTPUT);
   // pinMode(RELAY_3, OUTPUT);
@@ -102,13 +102,12 @@ void setup() {
 
   if (USE_WIFI == 1) {
     setup_wifi();
+    // Start server
+    server.begin();
   }
 
   // Turn Off the relays.
   motor->motorOff();
-
-  // Start server
-  server.begin();
 }
 
 
@@ -119,7 +118,7 @@ void loop() {
   // You can also call drd.stop() when you wish to no longer
   // consider the next reset as a double reset.
   drd_loop();
-  motor->checkRoofMovement();  // GG
+  motor->checkRoofMovement();
 
   if (USE_WIFI == 1) {
     wifi_loop(motor);
