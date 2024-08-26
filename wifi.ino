@@ -79,8 +79,8 @@ void setup_wifi() {
       DEBUG_INFO("connected to %s yeey :)", wm.getWiFiSSID().c_str());
       connectWifi();
     }
-    DEBUG_INFO("Network online, ready for rolloffino driver connections.");
   }
+  DEBUG_INFO("Network online, ready for rolloffino driver connections.");
 }
 
 
