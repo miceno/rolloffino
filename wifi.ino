@@ -1,6 +1,17 @@
 // #ifndef __rolloff_linear_actuator_wifi__
 // #define __rolloff_linear_actuator_wifi__
 #include <ESP8266mDNS.h>
+#include <DoubleResetDetector.h>
+
+// Number of seconds after reset during which a
+// subseqent reset will be considered a double reset.
+#define DRD_TIMEOUT 5
+
+// RTC Memory Address for the DoubleResetDetector to use
+#define DRD_ADDRESS 0
+
+DoubleResetDetector drd(DRD_TIMEOUT, DRD_ADDRESS);
+
 
 void connectWifi() {
   // Connect to the WiFi network:
@@ -58,22 +69,41 @@ void setup_wifi() {
   // then goes into a blocking loop awaiting configuration and will return success result
 
   bool res;
-  // res = wm.autoConnect(); // auto generated AP name from chipid
-  // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
-  wm.setWiFiAutoReconnect(true);
-  wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
-  wm.setConnectTimeout(WIFI_CONNECTION_TIMEOUT);
-  res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);  // password protected ap
+  if (drd.detectDoubleReset()) {
 
-  if (!res) {
-    DEBUG_ERROR("Failed to connect to SSID %s... restarting in %ds", wm.getWiFiSSID().c_str(), RESTART_DELAY);
-    restart();
-  } else {
+    //reset settings - for testing
+    //wm.resetSettings();
+
+    // set configportal timeout
+    wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
+
+    Serial.printf("Double Reset detected. Starting configuration portal on %s...\n", WIFI_DEFAULT_AP_SSID);
+    if (!wm.startConfigPortal(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET)) {
+      Serial.println("failed to connect and hit timeout");
+      restart();
+    }
+
     //if you get here you have connected to the WiFi
-    DEBUG_INFO("connected to %s yeey :)", wm.getWiFiSSID().c_str());
+    Serial.println("connected...yeey :)");
+
+  } else {
+    // res = wm.autoConnect(); // auto generated AP name from chipid
+    // res = wm.autoConnect("AutoConnectAP"); // anonymous ap
+    wm.setWiFiAutoReconnect(true);
+    wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
+    wm.setConnectTimeout(WIFI_CONNECTION_TIMEOUT);
+    res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);  // password protected ap
+
+    if (!res) {
+      DEBUG_ERROR("Failed to connect to SSID %s... restarting in %ds", wm.getWiFiSSID().c_str(), RESTART_DELAY);
+      restart();
+    } else {
+      //if you get here you have connected to the WiFi
+      DEBUG_INFO("connected to %s yeey :)", wm.getWiFiSSID().c_str());
+    }
+    printWifiStatus();
+    DEBUG_INFO("Network online, ready for rolloffino driver connections.");
   }
-  printWifiStatus();
-  DEBUG_INFO("Network online, ready for rolloffino driver connections.");
 }
 
 void reconnectWifi() {
@@ -128,6 +158,9 @@ WiFiClient get_wifi_client(WiFiClient client) {
 }
 
 void wifi_loop(Motor *m) {
+  MDNS.update();
+  MDNS.addService("rolloffino", "tcp", 8888);
+
   reconnect_wifi_helper();
 
   client = get_wifi_client(client);
@@ -141,6 +174,10 @@ void wifi_loop(Motor *m) {
   } else {
     DEBUG_VERBOSE("No data available. Sleeping...");  // DEBUG
   }
+}
+
+void drd_loop(){
+  drd.loop();
 }
 
 

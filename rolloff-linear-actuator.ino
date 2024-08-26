@@ -112,6 +112,11 @@ void setup() {
 
 // Wait here for command or switch request from host
 void loop() {
+  // Call the double reset detector loop method every so often,
+  // so that it can recognise when the timeout expires.
+  // You can also call drd.stop() when you wish to no longer
+  // consider the next reset as a double reset.
+  drd_loop();
   motor->checkRoofMovement();  // GG
 
   if (USE_WIFI == 1) {
