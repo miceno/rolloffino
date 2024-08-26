@@ -7,7 +7,7 @@
 #include "Arduino_DebugUtils.h"
 #include "functions.h"
 
-const char* TA6586_VERSION_ID = "V1.3-esp-wifi-magnet-ta6586";
+const char* TA6586_VERSION_ID = "V1.4-esp-wifimanager-magnet-ta6586";
 
 // Check if roof has fully opened or fully closed and turn off relay if so! GG
 bool TA6586::isRoofMoving() {
