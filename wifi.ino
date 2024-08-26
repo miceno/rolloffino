@@ -1,5 +1,3 @@
-// #ifndef __rolloff_linear_actuator_wifi__
-// #define __rolloff_linear_actuator_wifi__
 #include <ESP8266mDNS.h>
 #include <DoubleResetDetector.h>
 #include <WiFiManager.h>

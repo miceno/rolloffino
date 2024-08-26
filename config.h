@@ -83,17 +83,9 @@
 #define ROOF_MOTION_END_DELAY_MILLIS 5000
 
 // Buffer limits
-#define MAX_INPUT 45
-#define MAX_RESPONSE 127
-#define MAX_MESSAGE 63
-
-#define INTERNET_ADDR 192, 168, 1, 61  // Manual setup of IP address
-#define GATEWAY_ADDR 192, 168, 1, 1    // Gateway address
-#define SUBNET_ADDR 255, 255, 255, 0   // Subnet address
 #define INTERNET_PORT 8888             // Listen on telnet port, match in INDI driver tab
-
-#define CONSOLE_POWER_MODE PWC_ENABLE
-// Timeout in seconds to switch the console off
-#define CONSOLE_POWER_TIMEOUT 10
+#define MAX_INPUT_TEXT 45
+#define MAX_RESPONSE_TEXT 127
+#define MAX_MESSAGE_TEXT 63
 
 #endif

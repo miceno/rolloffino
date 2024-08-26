@@ -30,11 +30,11 @@ Set a relay     (SET:CLOSE:ON|OFF) >
 
 
 void sendAck(char* val) {
-  char response[MAX_RESPONSE];
+  char response[MAX_RESPONSE_TEXT];
   DEBUG_INFO("ACK=%s", val);  // DEBUG
-  if (strlen(val) > MAX_MESSAGE) {
-    strncpy(response, val, MAX_MESSAGE - 3);
-    strcpy(&response[MAX_MESSAGE - 3], "...");
+  if (strlen(val) > MAX_MESSAGE_TEXT) {
+    strncpy(response, val, MAX_MESSAGE_TEXT - 3);
+    strcpy(&response[MAX_MESSAGE_TEXT - 3], "...");
     sendNak(ERROR1);
     sendNak(response);
   } else {
@@ -55,11 +55,11 @@ void sendAck(char* val) {
 }
 
 void sendNak(const char* errorMsg) {
-  char buffer[MAX_RESPONSE];
+  char buffer[MAX_RESPONSE_TEXT];
   DEBUG_INFO("NACK=%s", errorMsg);  // DEBUG
-  if (strlen(errorMsg) > MAX_MESSAGE) {
-    strncpy(buffer, errorMsg, MAX_MESSAGE - 3);
-    strcpy(&buffer[MAX_MESSAGE - 3], "...");
+  if (strlen(errorMsg) > MAX_MESSAGE_TEXT) {
+    strncpy(buffer, errorMsg, MAX_MESSAGE_TEXT - 3);
+    strcpy(&buffer[MAX_MESSAGE_TEXT - 3], "...");
     sendNak(ERROR2);
     sendNak(buffer);
   } else {
@@ -116,7 +116,7 @@ bool receiveCommand()  // (command:target:value)
   int offset = 0;
   char startToken = '(';
   char endToken = ')';
-  const int bLen = MAX_INPUT;
+  const int bLen = MAX_INPUT_TEXT;
   char inpBuf[bLen + 1];
 
   memset(inpBuf, 0, sizeof(inpBuf));
@@ -128,7 +128,7 @@ bool receiveCommand()  // (command:target:value)
     recv_count = read_data(inpBuf, offset);
     if (recv_count == 1) {
       offset++;
-      if (offset >= MAX_INPUT) {
+      if (offset >= MAX_INPUT_TEXT) {
         sendNak(ERROR3);
         return false;
       }

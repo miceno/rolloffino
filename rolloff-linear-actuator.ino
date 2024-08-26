@@ -21,7 +21,6 @@
  * This version of the rolloff.ino has been modified to work with linear actuators that turn
  * themselves off when they reach their full extension and require the power to be 'inverted'
  * (+tive to -tive and -tive to +tive) so they can be retracted.
- * Review additions to the other Arduino samples to see if they are a more appropriate base.
  * The auxiliary button and light in the remote driver are to turn On or OFF the observatory lights.
  */
 
@@ -51,7 +50,7 @@ cmd_input command_input;
 
 const int cLen = 15;
 const int tLen = 15;
-const int vLen = MAX_RESPONSE;
+const int vLen = MAX_RESPONSE_TEXT;
 char command[cLen + 1];
 char target[tLen + 1];
 char value[vLen + 1];
@@ -61,21 +60,25 @@ unsigned long MotionStopTime;       // Related to ROOF_MOTION_END_DELAY_MILLIS G
 
 Motor* motor = new TA6586();
 
-
+/*
 IPAddress ip(INTERNET_ADDR);       // AP local Internet address
 IPAddress gw(GATEWAY_ADDR);        // AP gateway address
 IPAddress subnet(SUBNET_ADDR);     // AP subnet address
+*/
 WiFiServer server(INTERNET_PORT);  // Arduino server listening for connections on port specified
+
 WiFiClient client;                 // Connection to return data back to the indi driver
 
 boolean indiConnected = false;      // Driver has connected to local network
-// boolean indiData = false;        // Driver has made initial contact
-
 
 /*
  * One time initialization
  */
 void setup() {
+  // TODO: Store log_level on RTC memory and add it as a setup on wifimanager
+  // TODO: Store date on RTC memory
+  // TODO: Connect to telemetry to say "HELLO!"
+
   // Establish USB port.
   setup_serial();
 
