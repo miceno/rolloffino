@@ -11,7 +11,7 @@
 
 DoubleResetDetector drd(DRD_TIMEOUT, DRD_ADDRESS);
 WiFiManager wm;
-unsigned int startTime = millis();
+unsigned long wifiPortalStartTime = millis();
 
 
 void restart(void) {
@@ -37,7 +37,7 @@ void startConfigPortal(void) {
   if (!wm.startConfigPortal(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET)) {
     DEBUG_DEBUG("Portal is already running");
   }
-  startTime = millis();
+  wifiPortalStartTime = millis();
 }
 
 void setup_wifi() {
@@ -121,21 +121,22 @@ WiFiClient get_wifi_client(WiFiClient client) {
 }
 
 
-void wifi_loop(Motor *m) {
+void wifi_loop() {
   MDNS.update();
   MDNS.addService("rolloffino", "tcp", 8888);
 
   // Process WiFiManager config portal
   wm.process();
   // check for timeout
-  if ((millis() - startTime) > (WIFI_PORTAL_TIMEOUT * 1000)) {
+  if(TimePeriodIsOver(wifiPortalStartTime, MILLIS(WIFI_PORTAL_TIMEOUT))){
+  // if ((millis() - wifiPortalStartTime) > (WIFI_PORTAL_TIMEOUT * 1000)) {
     DEBUG_INFO("Portal timeout after %d seconds...", WIFI_PORTAL_TIMEOUT);
     if (wm.getConfigPortalActive()) {
       DEBUG_INFO("Config portal is active... restarting...");
       restart();
     } else {
       DEBUG_INFO("Config portal is not active... continue...");
-      startTime = millis();
+      wifiPortalStartTime = millis();
     }
   }
 

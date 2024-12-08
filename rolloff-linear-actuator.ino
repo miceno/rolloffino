@@ -121,7 +121,7 @@ void loop() {
   motor->checkRoofMovement();
 
   if (USE_WIFI == 1) {
-    wifi_loop(motor);
+    wifi_loop();
     parse_loop(motor);
   } else {
     serial_loop(motor);

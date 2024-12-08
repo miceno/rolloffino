@@ -1,6 +1,7 @@
 #ifndef __rolloffino_utils_h__
 #define __rolloffino_utils_h__
 
+#define MILLIS(x)    (x * 1000L)
 void setup_serial();
 void serial_loop(Motor* m);
 
