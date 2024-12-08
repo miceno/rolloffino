@@ -5,7 +5,7 @@
 #include "motor.h"
 #include "config.h"
 #include "Arduino_DebugUtils.h"
-#include "functions.h"
+#include "utils.h"
 
 const char* TA6586_VERSION_ID = "V1.4-esp-wifimanager-magnet-ta6586";
 

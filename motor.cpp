@@ -1,7 +1,7 @@
 #include "motor.h"
 #include "config.h"
 #include "Arduino_DebugUtils.h"
-#include "functions.h"
+#include "utils.h"
 #include <cstddef>
 
 ////////////////////////////////////////////////////////////////////////////////
