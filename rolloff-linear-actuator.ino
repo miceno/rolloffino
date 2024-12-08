@@ -77,7 +77,7 @@ boolean indiConnected = false;
 void setup() {
   // TODO: Store log_level on RTC memory and add it as a setup on wifimanager
   // TODO: Store date on RTC memory
-  // TODO: Connect to telemetry to say "HELLO!"
+  // TODO: Connect to telemetry for heartbeat
 
   // Establish serial port.
   setup_serial();

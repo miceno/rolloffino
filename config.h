@@ -1,5 +1,5 @@
 #ifndef __rolloff_linear_actuator_config_h__
-#define __rolloff_linear_actuator_config_h__ 1
+#define __rolloff_linear_actuator_config_h__
 
 
 #define BAUD_RATE 74880             // USB connection baud rate

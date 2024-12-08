@@ -1,5 +1,5 @@
-#ifndef __functions_h
-#define __functions_h
+#ifndef __functions_h__
+#define __functions_h__
 
 void setup_serial();
 void serial_loop(Motor* m);

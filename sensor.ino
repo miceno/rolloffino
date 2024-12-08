@@ -1,7 +1,3 @@
-#ifndef __rolloff_linear_actuator_sensor__
-#define __rolloff_linear_actuator_sensor__
-
-
 /*
  * Get switch value
  * NO contacts used and configured with a pull up resistor to the Arduino input pin. Logical 1 input when switch opened. GG
@@ -25,5 +21,3 @@ bool isSwitchOn(int id) {
   return false;
 }
 
-
-#endif

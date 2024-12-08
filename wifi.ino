@@ -121,6 +121,7 @@ WiFiClient get_wifi_client(WiFiClient client) {
   return client;
 }
 
+
 void wifi_loop(Motor *m) {
   MDNS.update();
   MDNS.addService("rolloffino", "tcp", 8888);
@@ -139,22 +140,9 @@ void wifi_loop(Motor *m) {
     }
   }
 
-  client = get_wifi_client(client);
-  // Wait for incoming data from the INDI driver
-  if (client) {
-    client.flush();
-    if (client.available() > 0) {
-      DEBUG_VERBOSE("available data...");
-      parseCommand(m);
-    }
-  } else {
-    DEBUG_VERBOSE("No data available. Sleeping...");
-  }
 }
 
 void drd_loop() {
   drd.loop();
 }
 
-
-// #endif

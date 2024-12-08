@@ -1,6 +1,3 @@
-// #ifndef __rolloff_linear_actuator_comm__
-// #define __rolloff_linear_actuator_comm__ 1
-
 void setup_serial() {
   // Serial.setDebugOutput(true);
   Serial.begin(BAUD_RATE);  // Baud rate to match that in the driver
@@ -22,7 +19,3 @@ void serial_loop(Motor *m) {
   }
   parseCommand(m);  // Some input detected
 }
-
-
-
-// #endif

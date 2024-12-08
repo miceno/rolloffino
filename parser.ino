@@ -1,6 +1,3 @@
-#ifndef __rolloff_linear_actuator_parser__
-#define __rolloff_linear_actuator_parser__
-
 /*
 Command Format:  (command:target|state:value)
 Response Format: (response:target|state:value)
@@ -28,6 +25,7 @@ Set a relay     (SET:CLOSE:ON|OFF) >
                                    <  (ACK:CLOSE:ON|OFF) | (NAK:ERROR:message)
 */
 
+#include "motor.h"
 
 void sendAck(char* val) {
   char response[MAX_RESPONSE_TEXT];
@@ -309,5 +307,17 @@ void parseCommand(Motor* m) {
   }
 }
 
+void parse_loop(Motor* m) {
+  client = get_wifi_client(client);
+  // Wait for incoming data from the INDI driver
+  if (client) {
+    client.flush();
+    if (client.available() > 0) {
+      DEBUG_VERBOSE("available data...");
+      parseCommand(m);
+    }
+  } else {
+    DEBUG_VERBOSE("No data available. Sleeping...");
+  }
+}
 
-#endif
