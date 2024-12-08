@@ -1,6 +1,3 @@
-#ifndef __rolloff_linear_actuator_ta6586__
-#define __rolloff_linear_actuator_ta6586__
-
 #include <ESP8266WiFi.h>
 #include "motor.h"
 #include "config.h"
@@ -117,5 +114,3 @@ const char* TA6586::getVersion() {
 bool TA6586::isStopAllowed() {
   return true;
 }
-
-#endif
