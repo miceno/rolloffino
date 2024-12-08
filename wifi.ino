@@ -71,8 +71,7 @@ void setup_wifi() {
     res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);
 
     if (!res) {
-      DEBUG_ERROR("Failed to connect to SSID %s... restarting in %ds", wm.getWiFiSSID().c_str(), RESTART_DELAY);
-      // restart();
+      DEBUG_ERROR("Failed to connect to SSID %s... starting WM portal.", wm.getWiFiSSID().c_str());      // restart();
       startConfigPortal();
     } else {
       //if you get here you have connected to the WiFi
