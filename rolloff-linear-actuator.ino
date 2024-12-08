@@ -122,6 +122,7 @@ void loop() {
 
   if (USE_WIFI == 1) {
     wifi_loop(motor);
+    parse_loop(motor);
   } else {
     serial_loop(motor);
   }
