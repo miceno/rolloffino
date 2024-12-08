@@ -63,9 +63,4 @@ public:
   const char *getVersion();
 };
 
-class DRV8871 : public TA6586 {
-  const char *getVersion();
-};
-
-
 #endif
