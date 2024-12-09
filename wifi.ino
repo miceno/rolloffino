@@ -71,7 +71,7 @@ void setup_wifi() {
     res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);
 
     if (!res) {
-      DEBUG_ERROR("Failed to connect to SSID %s... starting WM portal.", wm.getWiFiSSID().c_str());      // restart();
+      DEBUG_ERROR("Failed to connect to SSID %s... starting WM portal.", wm.getWiFiSSID().c_str());  // restart();
       startConfigPortal();
     } else {
       //if you get here you have connected to the WiFi
@@ -128,21 +128,22 @@ void wifi_loop() {
   // Process WiFiManager config portal
   wm.process();
   // check for timeout
-  if(TimePeriodIsOver(wifiPortalStartTime, MILLIS(WIFI_PORTAL_TIMEOUT))){
-  // if ((millis() - wifiPortalStartTime) > (WIFI_PORTAL_TIMEOUT * 1000)) {
+  if (TimePeriodIsOver(wifiPortalStartTime, MILLIS(WIFI_PORTAL_TIMEOUT))) {
+    // if ((millis() - wifiPortalStartTime) > (WIFI_PORTAL_TIMEOUT * 1000)) {
     DEBUG_INFO("Portal timeout after %d seconds...", WIFI_PORTAL_TIMEOUT);
     if (wm.getConfigPortalActive()) {
       DEBUG_INFO("Config portal is active... restarting...");
-      restart();
+      if (wm.WiFi_softap_num_stations() == 0) {
+        DEBUG_WARNING("No station detected... restarting...");
+        restart();
+      }
     } else {
       DEBUG_INFO("Config portal is not active... continue...");
-      wifiPortalStartTime = millis();
     }
+    wifiPortalStartTime = millis();
   }
-
 }
 
 void drd_loop() {
   drd.loop();
 }
-
