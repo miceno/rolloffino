@@ -32,10 +32,10 @@ void startConfigPortal(void) {
   // Start configuration portal non blocking, so we can use rolloffino anyway.
   wm.setConfigPortalBlocking(false);
 
-  DEBUG_INFO("Starting configuration portal with SSID %s (timeout %d seconds).", WIFI_DEFAULT_AP_SSID, WIFI_PORTAL_TIMEOUT);
+  DEBUG_INFO("Starting config portal with SSID %s (timeout %d seconds).", WIFI_DEFAULT_AP_SSID, WIFI_PORTAL_TIMEOUT);
 
   if (!wm.startConfigPortal(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET)) {
-    DEBUG_DEBUG("Portal is already running");
+    DEBUG_WARNING("Config portal is already running");
   }
   wifiPortalStartTime = millis();
 }
@@ -132,13 +132,15 @@ void wifi_loop() {
     // if ((millis() - wifiPortalStartTime) > (WIFI_PORTAL_TIMEOUT * 1000)) {
     DEBUG_INFO("Portal timeout after %d seconds...", WIFI_PORTAL_TIMEOUT);
     if (wm.getConfigPortalActive()) {
-      DEBUG_INFO("Config portal is active... restarting...");
-      if (wm.WiFi_softap_num_stations() == 0) {
+      DEBUG_INFO("Config portal is active...");
+      if (WiFi.softAPgetStationNum() == 0) {
         DEBUG_WARNING("No station detected... restarting...");
         restart();
+      } else {
+        DEBUG_INFO("Stations connected to config portal, continue...");
       }
     } else {
-      DEBUG_INFO("Config portal is not active... continue...");
+      DEBUG_INFO("Config portal is not active. Continue...");
     }
     wifiPortalStartTime = millis();
   }
