@@ -18,5 +18,7 @@ bool is_data_available();
 void parseCommand(Motor* m);
 
 void setup_debug();
+bool TimePeriodIsOver(unsigned long& startOfPeriod, unsigned long TimePeriod);
+
 
 #endif
