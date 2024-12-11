@@ -121,7 +121,7 @@ WiFiClient get_wifi_client(WiFiClient client) {
 }
 
 
-void wifi_loop() {
+void wifi_manager_loop() {
   MDNS.update();
   MDNS.addService("rolloffino", "tcp", 8888);
 
