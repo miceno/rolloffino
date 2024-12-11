@@ -307,7 +307,7 @@ void parseCommand(Motor* m) {
   }
 }
 
-void parse_loop(Motor* m) {
+void parser_loop(Motor* m) {
   client = get_wifi_client(client);
   // Wait for incoming data from the INDI driver
   if (client) {
