@@ -37,15 +37,19 @@ void TA6586::motorOff() {
   DEBUG_INFO("Motor OFF");
   // Make sure motors are stopped
 
-  // Set both to high to disable motor.
+  // Set both to high to set motor brake.
   // HIGH means also that LED_BUILTIN will also switch off in case we are using
   // LED_BUILTIN for the motor.
-  digitalWrite(FUNC_DIRECTION_A, HIGH);
-  digitalWrite(FUNC_ACTIVATION_A, HIGH);
+  if (FUNC_DIRECTION_A != PIN_UNDEFINED) {
+    digitalWrite(FUNC_DIRECTION_A, HIGH);
+    digitalWrite(FUNC_ACTIVATION_A, HIGH);
+  }
 
-  // Set both to high to disable motor.
-  digitalWrite(FUNC_DIRECTION_B, HIGH);
-  digitalWrite(FUNC_ACTIVATION_B, HIGH);
+  // Set both to high to set motor brake.
+  if (FUNC_DIRECTION_B != PIN_UNDEFINED) {
+    digitalWrite(FUNC_DIRECTION_B, HIGH);
+    digitalWrite(FUNC_ACTIVATION_B, HIGH);
+  }
   MotionStartTime = 0;
   MotionStopTime = 0;
 }
@@ -71,17 +75,22 @@ void TA6586::openCommand() {
 
   // Activate the motor
   motorOn();
-  // Move motor: first set pwm and then activate direction.
-  // Use PWM to allow different speeds on each motor.
-  analogWrite(FUNC_ACTIVATION_A, map(MOTOR_A_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
-  // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_DIRECTION_A, LOW);
-  
-  // Use PWM to allow different speeds on each motor.
-  analogWrite(FUNC_ACTIVATION_B, map(MOTOR_B_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
-  // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_DIRECTION_B, LOW);
 
+  if (FUNC_DIRECTION_A != PIN_UNDEFINED) {
+    // Move motor: first set pwm and then activate direction.
+    // Use PWM to allow different speeds on each motor.
+    analogWrite(FUNC_ACTIVATION_A, map(MOTOR_A_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
+    // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_DIRECTION_A, LOW);
+  }
+
+  if (FUNC_DIRECTION_B != PIN_UNDEFINED) {
+
+    // Use PWM to allow different speeds on each motor.
+    analogWrite(FUNC_ACTIVATION_B, map(MOTOR_B_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
+    // Set actuator voltage leads to open actuator
+    digitalWrite(FUNC_DIRECTION_B, LOW);
+  }
   MotionStartTime = millis();
   MotionStopTime = 0;
 }
@@ -94,17 +103,20 @@ void TA6586::closeCommand() {
 
   // Activate the motor
   motorOn();
-  // Move motor: first set pwm and then activate direction.
-  // Use PWM to allow different speeds on each motor.
-  analogWrite(FUNC_DIRECTION_A, map(MOTOR_A_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
-  // Set actuator voltage leads to close actuator
-  digitalWrite(FUNC_ACTIVATION_A, LOW);
+  if (FUNC_DIRECTION_A != PIN_UNDEFINED) {
+    // Move motor: first set pwm and then activate direction.
+    // Use PWM to allow different speeds on each motor.
+    analogWrite(FUNC_DIRECTION_A, map(MOTOR_A_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
+    // Set actuator voltage leads to close actuator
+    digitalWrite(FUNC_ACTIVATION_A, LOW);
+  }
+  if (FUNC_DIRECTION_B != PIN_UNDEFINED) {
 
-  // Use PWM to allow different speeds on each motor.
-  analogWrite(FUNC_DIRECTION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
-  // Set actuator voltage leads to close actuator
-  digitalWrite(FUNC_ACTIVATION_B, LOW);
-
+    // Use PWM to allow different speeds on each motor.
+    analogWrite(FUNC_DIRECTION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
+    // Set actuator voltage leads to close actuator
+    digitalWrite(FUNC_ACTIVATION_B, LOW);
+  }
   MotionStartTime = millis();
   MotionStopTime = 0;
 }

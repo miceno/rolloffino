@@ -9,7 +9,7 @@
 #define WIFI_CONNECTION_TIMEOUT 10  // Timeout to wait for connection to AP
 #define WIFI_MAX_RETRIES 10         // Max retries connecting to wifi
 #define RESTART_DELAY 5             // Delay in seconds to wait before restarts
-
+#define PIN_UNDEFINED ((uint8_t)-1)
 #include "wifi_secrets.h"
 
 // Define USE_WIFI if WiFi is to be used instead of USB to communicate with INDI driver.
