@@ -60,7 +60,7 @@ unsigned long MotionStartTime = 0;
 // Related to ROOF_MOTION_END_DELAY_MILLIS GG
 unsigned long MotionStopTime;
 
-Motor* motor = new TA6586();
+Motor* motor = new DRV8871();
 
 // Arduino server listening for connections on port specified
 WiFiServer server(INTERNET_PORT);
