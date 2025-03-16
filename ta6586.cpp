@@ -15,6 +15,7 @@ void TA6586::checkRoofMovement() {
   if (!isRoofMoving()) {
     if (MotionStartTime != 0) {
       if (TimePeriodIsOver(MotionStartTime, ROOF_MOVEMENT_MIN_TIME_MILLIS)) {
+        DEBUG_INFO("ROOF_MOVEMENT_MIN_TIME timeout");
         if (isSwitchOn(SWITCH_OPENED) || isSwitchOn(SWITCH_CLOSED)) {
           DEBUG_INFO("Sensors say roof is open or closed: it is not moving...");
         }
@@ -25,7 +26,7 @@ void TA6586::checkRoofMovement() {
     // Roof is moving
     // Add some delay for complete roof opening or closure
     if (TimePeriodIsOver(MotionStopTime, ROOF_MOTION_END_DELAY_MILLIS)) {
-      DEBUG_INFO("STOP");
+      DEBUG_INFO("ROOF_MOTION_END_DELAY: STOP");
       stopCommand();
       MotionStopTime = 0;
     }
