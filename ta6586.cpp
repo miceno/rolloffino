@@ -71,17 +71,16 @@ void TA6586::openCommand() {
 
   // Activate the motor
   motorOn();
-
+  // Move motor: first set pwm and then activate direction.
+  // Use PWM to allow different speeds on each motor.
+  analogWrite(FUNC_ACTIVATION_A, map(MOTOR_A_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
   // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_DIRECTION_A, LOW);
+  
   // Use PWM to allow different speeds on each motor.
-  analogWrite(FUNC_DIRECTION_A, map(MOTOR_A_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
-  // Set actuator in motion
-  digitalWrite(FUNC_ACTIVATION_A, LOW);
-
-  // Use PWM to allow different speeds on each motor.
-  analogWrite(FUNC_DIRECTION_B, map(MOTOR_B_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
-  // Set actuator in motion
-  digitalWrite(FUNC_ACTIVATION_B, LOW);
+  analogWrite(FUNC_ACTIVATION_B, map(MOTOR_B_SPEED_FACTOR_OPENING, 0, 100, 0, 255));
+  // Set actuator voltage leads to open actuator
+  digitalWrite(FUNC_DIRECTION_B, LOW);
 
   MotionStartTime = millis();
   MotionStopTime = 0;
@@ -89,19 +88,22 @@ void TA6586::openCommand() {
 
 void TA6586::closeCommand() {
   DEBUG_INFO("CLOSE");
+
   // Blink when closing roof
   // digitalWrite(FUNC_BLINKER, HIGH);
+
   // Activate the motor
   motorOn();
-  // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_DIRECTION_A, LOW);
+  // Move motor: first set pwm and then activate direction.
   // Use PWM to allow different speeds on each motor.
-  analogWrite(FUNC_ACTIVATION_A, map(MOTOR_A_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
+  analogWrite(FUNC_DIRECTION_A, map(MOTOR_A_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
+  // Set actuator voltage leads to close actuator
+  digitalWrite(FUNC_ACTIVATION_A, LOW);
 
-  // Set actuator voltage leads to open actuator
-  digitalWrite(FUNC_DIRECTION_B, LOW);
   // Use PWM to allow different speeds on each motor.
-  analogWrite(FUNC_ACTIVATION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
+  analogWrite(FUNC_DIRECTION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
+  // Set actuator voltage leads to close actuator
+  digitalWrite(FUNC_ACTIVATION_B, LOW);
 
   MotionStartTime = millis();
   MotionStopTime = 0;
