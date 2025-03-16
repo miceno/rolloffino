@@ -79,8 +79,8 @@
  * In case the end of run switches are not reached, some way to know if it is moving
  * would be helpful. Short of that estimate how long it takes the roof to open or close
  */
-#define ROOF_MOVEMENT_MIN_TIME_MILLIS 20000
-#define ROOF_MOTION_END_DELAY_MILLIS 5000
+#define ROOF_MOVEMENT_MIN_TIME_MILLIS 30000
+#define ROOF_MOTION_END_DELAY_MILLIS 15000
 
 // Buffer limits
 #define INTERNET_PORT 8888  // Listen on telnet port, match in INDI driver tab
