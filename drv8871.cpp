@@ -4,7 +4,7 @@
 #include <ESP8266WiFi.h>
 #include "motor.h"
 
-const char* DRV8871_VERSION_ID = "V1.3-esp-wifi-magnet-DRV8871";
+const char* DRV8871_VERSION_ID = "V1.6-esp-wifimanager-magnet-DRV8871";
 
 const char* DRV8871::getVersion() {
   return DRV8871_VERSION_ID;
