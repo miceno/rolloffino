@@ -47,7 +47,7 @@ void setup_wifi() {
   // explicitly set mode, esp defaults to STA+AP
   WiFi.mode(WIFI_STA);
   WiFi.forceSleepWake();
-  WiFi.setSleepMode(WIFI_NONE_SLEEP);
+  WiFi.setSleepMode(WIFI_LIGHT_SLEEP);
 
   //WiFiManager, Local intialization. Once its business is done, there is no need to keep it around
   wm.setHostname("rolloffino");
