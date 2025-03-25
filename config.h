@@ -43,8 +43,10 @@
 // #define RELAY_4 12
 
 // For DRV8871 with just one channel, set B channel to undefined
-#define RELAY_B1 PIN_UNDEFINED  // Motor B PWM
-#define RELAY_B2 PIN_UNDEFINED  // Motor B direction
+// #define RELAY_B1 PIN_UNDEFINED  // Motor B PWM
+// #define RELAY_B2 PIN_UNDEFINED  // Motor B direction
+#define RELAY_B1 D7  // Motor B PWM
+#define RELAY_B2 D8  // Motor B direction
 
 // Indirection to define a functional name in terms of a switch
 // Use 0 if switch not implemented
