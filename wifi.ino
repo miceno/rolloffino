@@ -53,30 +53,46 @@ void setup_wifi() {
   wm.setHostname("rolloffino");
   MDNS.begin("rolloffino");
   wm.setConfigPortalBlocking(false);
+  wm.setWiFiAutoReconnect(true);
+  wm.setConnectTimeout(WIFI_CONNECTION_TIMEOUT);
+
   // set configportal timeout
   // wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
 
-  bool res;
+  bool startPortal = false;
+
   if (drd.detectDoubleReset()) {
-    DEBUG_INFO("Double Reset detected. Starting configuration portal on %s...", WIFI_DEFAULT_AP_SSID);
-
-    startConfigPortal();
+    Serial.println("Double reset! Starting WiFiManager portal...");
+    startPortal = true;
   } else {
-    DEBUG_DEBUG("Connecting to last configured AP");
+    WiFi.begin(WIFI_SSID, WIFI_SSID_PASSWORD);
+    Serial.print("Connecting to WiFi");
+    int retries = 0;
+    while (WiFi.status() != WL_CONNECTED && retries < 20) {
+      delay(500);
+      Serial.print(".");
+      retries++;
+    }
+    Serial.println();
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("Connected!");
+      Serial.print("IP address: ");
+      Serial.println(WiFi.localIP());
+    } else {
+      startPortal = true;
+    }
+  }
 
-    // wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
-    wm.setWiFiAutoReconnect(true);
-    wm.setConnectTimeout(WIFI_CONNECTION_TIMEOUT);
-    // password protected ap
+  if (startPortal) {
+    bool res = false;
     res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);
-
     if (!res) {
       DEBUG_ERROR("Failed to connect to SSID %s... starting WM portal.", wm.getWiFiSSID().c_str());  // restart();
       startConfigPortal();
     } else {
-      //if you get here you have connected to the WiFi
-      DEBUG_INFO("connected to %s yeey :)", wm.getWiFiSSID().c_str());
-      connectWifi();
+      Serial.println("Connected via WiFiManager!");
+      Serial.print("IP address: ");
+      Serial.println(WiFi.localIP());
     }
   }
   DEBUG_INFO("Network online, ready for rolloffino driver connections.");
@@ -149,3 +165,59 @@ void wifi_manager_loop() {
 void drd_loop() {
   drd.loop();
 }
+
+
+/*
+#include <ESP8266WiFi.h>
+#include <WiFiManager.h>
+#include <DoubleResetDetector.h>
+
+#define DRD_TIMEOUT 5
+#define DRD_ADDRESS 0
+
+DoubleResetDetector drd(DRD_TIMEOUT, DRD_ADDRESS);
+
+const char* ssid = "movistar";
+const char* password = "123456789";
+
+void setup() {
+  Serial.begin(115200);
+  delay(100);
+
+  bool startConfigPortal = false;
+
+  if (drd.detectDoubleReset()) {
+    Serial.println("Double reset detected! Starting WiFiManager portal...");
+    startConfigPortal = true;
+  } else {
+    WiFi.begin(ssid, password);
+    Serial.print("Connecting to WiFi");
+    int retries = 0;
+    while (WiFi.status() != WL_CONNECTED && retries < 20) {
+      delay(500);
+      Serial.print(".");
+      retries++;
+    }
+    Serial.println();
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("Connected!");
+      Serial.print("IP address: ");
+      Serial.println(WiFi.localIP());
+    } else {
+      startConfigPortal = true;
+    }
+  }
+
+  if (startConfigPortal) {
+    WiFiManager wifiManager;
+    wifiManager.autoConnect("ESP8266-Setup");
+    Serial.println("Connected via WiFiManager!");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+  }
+}
+
+void loop() {
+  drd.loop();
+  // Your main code here
+}*/
