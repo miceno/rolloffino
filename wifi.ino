@@ -15,6 +15,11 @@ unsigned long wifiPortalStartTime = millis();
 
 
 void restart(void) {
+  // Set WiFi mode to OFF
+  WiFi.mode(WIFI_OFF);
+  // Put WiFi into sleep mode
+  WiFi.forceSleepBegin();
+  // Add a delay to ensure WiFi is off
   delay(RESTART_DELAY * 1000);
   ESP.restart();
 }
@@ -48,6 +53,7 @@ void setup_wifi() {
   WiFi.mode(WIFI_STA);
   WiFi.forceSleepWake();
   WiFi.setSleepMode(WIFI_LIGHT_SLEEP);
+  delay(1);
 
   //WiFiManager, Local intialization. Once its business is done, there is no need to keep it around
   wm.setHostname("rolloffino");
@@ -83,7 +89,7 @@ void setup_wifi() {
         failures++;
       }
     }
-    if (failures == wifi_list_size){
+    if (failures == wifi_list_size) {
       startPortal = true;
     }
   }
@@ -144,6 +150,7 @@ WiFiClient get_wifi_client(WiFiClient client) {
 void wifi_manager_loop() {
   MDNS.update();
   MDNS.addService("rolloffino", "tcp", 8888);
+  delay(1);
 
   // Process WiFiManager config portal
   wm.process();
