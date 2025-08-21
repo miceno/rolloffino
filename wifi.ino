@@ -60,11 +60,12 @@ void setup_wifi() {
   // wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
 
   bool startPortal = false;
-
+  int failures = 0;
   if (drd.detectDoubleReset()) {
     DEBUG_WARNING("Double reset! Starting WiFiManager portal...");
     startPortal = true;
   } else {
+
     for (const auto& creds : wifi_list) {
       WiFi.begin(creds.ssid, creds.password);
       Serial.printf("Connecting to WiFi %s", creds.ssid);
@@ -79,12 +80,15 @@ void setup_wifi() {
         DEBUG_INFO("Connected to %s at IP address %s ", creds.ssid, WiFi.localIP().toString().c_str());
         break;
       } else {
-        startPortal = true;
+        failures++;
       }
+    }
+    if (failures == wifi_list_size){
+      startPortal = true;
     }
   }
 
-  if (startPortal) {
+  if (startPortal == true) {
     bool res = false;
     res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);
     if (!res) {
@@ -165,4 +169,3 @@ void wifi_manager_loop() {
 void drd_loop() {
   drd.loop();
 }
-
