@@ -150,7 +150,7 @@ void wifi_manager_loop() {
   // check for timeout
   if (TimePeriodIsOver(wifiPortalStartTime, MILLIS(WIFI_PORTAL_TIMEOUT))) {
     // if ((millis() - wifiPortalStartTime) > (WIFI_PORTAL_TIMEOUT * 1000)) {
-    DEBUG_INFO("Portal timeout after %d seconds...", WIFI_PORTAL_TIMEOUT);
+    DEBUG_DEBUG("Portal timeout after %d seconds...", WIFI_PORTAL_TIMEOUT);
     if (wm.getConfigPortalActive()) {
       DEBUG_INFO("Config portal is active...");
       if (WiFi.softAPgetStationNum() == 0) {
@@ -160,7 +160,7 @@ void wifi_manager_loop() {
         DEBUG_INFO("Stations connected to config portal, continue...");
       }
     } else {
-      DEBUG_INFO("Config portal is not active. Continue...");
+      DEBUG_DEBUG("Config portal is not active. Continue...");
       if (WiFi.status() != WL_CONNECTED) {
         DEBUG_WARNING("No connection detected... restarting...");
         restart();
