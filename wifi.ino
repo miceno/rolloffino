@@ -161,6 +161,10 @@ void wifi_manager_loop() {
       }
     } else {
       DEBUG_INFO("Config portal is not active. Continue...");
+      if (WiFi.status() != WL_CONNECTED) {
+        DEBUG_WARNING("No connection detected... restarting...");
+        restart();
+      }
     }
     wifiPortalStartTime = millis();
   }
