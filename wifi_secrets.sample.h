@@ -21,4 +21,6 @@ static const WifiCredentials wifi_list[] = {
     { WIFI_SSID2, WIFI_SSID_PASSWORD2 }
 };
 
+static int wifi_list_size = sizeof(wifi_list) / sizeof(wifi_list[0]);
+
 #endif
