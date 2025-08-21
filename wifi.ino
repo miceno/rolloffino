@@ -72,7 +72,7 @@ void setup_wifi() {
     startPortal = true;
   } else {
 
-    for (const auto& creds : wifi_list) {
+    for (const WifiCredentials& creds : wifi_list) {
       WiFi.begin(creds.ssid, creds.password);
       Serial.printf("Connecting to WiFi %s", creds.ssid);
       int retries = 0;
