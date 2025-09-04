@@ -106,17 +106,17 @@ void TA6586::closeCommand() {
   motorOn();
   if (FUNC_DIRECTION_A != PIN_UNDEFINED) {
     // Move motor: first set pwm and then activate direction.
-    // Use PWM to allow different speeds on each motor.
-    analogWrite(FUNC_DIRECTION_A, map(MOTOR_A_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
     // Set actuator voltage leads to close actuator
     digitalWrite(FUNC_ACTIVATION_A, LOW);
+    // Use PWM to allow different speeds on each motor.
+    analogWrite(FUNC_DIRECTION_A, map(MOTOR_A_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
   }
   if (FUNC_DIRECTION_B != PIN_UNDEFINED) {
 
-    // Use PWM to allow different speeds on each motor.
-    analogWrite(FUNC_DIRECTION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
     // Set actuator voltage leads to close actuator
     digitalWrite(FUNC_ACTIVATION_B, LOW);
+    // Use PWM to allow different speeds on each motor.
+    analogWrite(FUNC_DIRECTION_B, map(MOTOR_B_SPEED_FACTOR_CLOSING, 0, 100, 0, 255));
   }
   MotionStartTime = millis();
   MotionStopTime = 0;
