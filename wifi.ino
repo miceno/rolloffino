@@ -125,8 +125,11 @@ void connectWifi() {
 
 WiFiClient get_wifi_client(WiFiClient client) {
   if (!client) {
+    client.stop();
     client = server.available();
   }
+  client.setDefaultNoDelay(true);
+  client.setNoDelay(true);
   if (client.connected()) {
     DEBUG_VERBOSE("client.connected");
     if (!indiConnected) {
