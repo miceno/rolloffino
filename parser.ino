@@ -44,10 +44,10 @@ void sendAck(char* val) {
     if (USE_WIFI == 1) {
       DEBUG_VERBOSE("about to send response: %s", response);
       client.println(response);
-      client.flush();
+      // client.flush();
     } else {
       Serial.println(response);
-      Serial.flush();
+      // Serial.flush();
     }
   }
 }
@@ -71,7 +71,7 @@ void sendNak(const char* errorMsg) {
       // client.flush();
     } else {
       Serial.println(buffer);
-      Serial.flush();
+      // Serial.flush();
     }
   }
 }
@@ -308,10 +308,12 @@ void parseCommand(Motor* m) {
 }
 
 void parser_loop(Motor* m) {
-  client = get_wifi_client(client);
+  if (!client) {
+    client = get_wifi_client(client);
+  }
   // Wait for incoming data from the INDI driver
   if (client) {
-    client.flush();
+    // client.flush();
     if (client.available() > 0) {
       DEBUG_VERBOSE("available data...");
       parseCommand(m);
@@ -320,4 +322,3 @@ void parser_loop(Motor* m) {
     DEBUG_VERBOSE("No data available. Sleeping...");
   }
 }
-

@@ -15,6 +15,11 @@ unsigned long wifiPortalStartTime = millis();
 
 
 void restart(void) {
+  // Set WiFi mode to OFF
+  WiFi.mode(WIFI_OFF);
+  // Put WiFi into sleep mode
+  WiFi.forceSleepBegin();
+  // Add a delay to ensure WiFi is off
   delay(RESTART_DELAY * 1000);
   ESP.restart();
 }
@@ -48,35 +53,56 @@ void setup_wifi() {
   WiFi.mode(WIFI_STA);
   WiFi.forceSleepWake();
   WiFi.setSleepMode(WIFI_LIGHT_SLEEP);
+  delay(1);
 
   //WiFiManager, Local intialization. Once its business is done, there is no need to keep it around
   wm.setHostname("rolloffino");
   MDNS.begin("rolloffino");
   wm.setConfigPortalBlocking(false);
+  wm.setWiFiAutoReconnect(true);
+  wm.setConnectTimeout(WIFI_CONNECTION_TIMEOUT);
+
   // set configportal timeout
   // wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
 
-  bool res;
+  bool startPortal = false;
+  int failures = 0;
   if (drd.detectDoubleReset()) {
-    DEBUG_INFO("Double Reset detected. Starting configuration portal on %s...", WIFI_DEFAULT_AP_SSID);
-
-    startConfigPortal();
+    DEBUG_WARNING("Double reset! Starting WiFiManager portal...");
+    startPortal = true;
   } else {
-    DEBUG_DEBUG("Connecting to last configured AP");
 
-    // wm.setConfigPortalTimeout(WIFI_PORTAL_TIMEOUT);
-    wm.setWiFiAutoReconnect(true);
-    wm.setConnectTimeout(WIFI_CONNECTION_TIMEOUT);
-    // password protected ap
+    for (const WifiCredentials& creds : wifi_list) {
+      WiFi.begin(creds.ssid, creds.password);
+      Serial.printf("Connecting to WiFi %s", creds.ssid);
+      int retries = 0;
+      while (WiFi.status() != WL_CONNECTED && retries < 20) {
+        delay(500);
+        Serial.print(".");
+        retries++;
+      }
+      Serial.println();
+      if (WiFi.status() == WL_CONNECTED) {
+        DEBUG_INFO("Connected to %s at IP address %s ", creds.ssid, WiFi.localIP().toString().c_str());
+        break;
+      } else {
+        failures++;
+      }
+    }
+    if (failures == wifi_list_size) {
+      startPortal = true;
+    }
+  }
+
+  if (startPortal == true) {
+    bool res = false;
     res = wm.autoConnect(WIFI_DEFAULT_AP_SSID, WIFI_DEFAULT_AP_SECRET);
-
     if (!res) {
-      DEBUG_ERROR("Failed to connect to SSID %s... starting WM portal.", wm.getWiFiSSID().c_str());  // restart();
+      DEBUG_ERROR("Failed to connect to SSID %s... starting WM portal.", wm.getWiFiSSID().c_str());
+      // restart();
       startConfigPortal();
     } else {
-      //if you get here you have connected to the WiFi
-      DEBUG_INFO("connected to %s yeey :)", wm.getWiFiSSID().c_str());
-      connectWifi();
+      DEBUG_INFO("Connected via WiFiManager! IP address: %s", WiFi.localIP().toString().c_str());
     }
   }
   DEBUG_INFO("Network online, ready for rolloffino driver connections.");
@@ -99,8 +125,11 @@ void connectWifi() {
 
 WiFiClient get_wifi_client(WiFiClient client) {
   if (!client) {
+    client.stop();
     client = server.available();
   }
+  client.setDefaultNoDelay(true);
+  client.setNoDelay(true);
   if (client.connected()) {
     DEBUG_VERBOSE("client.connected");
     if (!indiConnected) {
@@ -124,13 +153,14 @@ WiFiClient get_wifi_client(WiFiClient client) {
 void wifi_manager_loop() {
   MDNS.update();
   MDNS.addService("rolloffino", "tcp", 8888);
+  delay(1);
 
   // Process WiFiManager config portal
   wm.process();
   // check for timeout
   if (TimePeriodIsOver(wifiPortalStartTime, MILLIS(WIFI_PORTAL_TIMEOUT))) {
     // if ((millis() - wifiPortalStartTime) > (WIFI_PORTAL_TIMEOUT * 1000)) {
-    DEBUG_INFO("Portal timeout after %d seconds...", WIFI_PORTAL_TIMEOUT);
+    DEBUG_DEBUG("Portal timeout after %d seconds...", WIFI_PORTAL_TIMEOUT);
     if (wm.getConfigPortalActive()) {
       DEBUG_INFO("Config portal is active...");
       if (WiFi.softAPgetStationNum() == 0) {
@@ -140,7 +170,11 @@ void wifi_manager_loop() {
         DEBUG_INFO("Stations connected to config portal, continue...");
       }
     } else {
-      DEBUG_INFO("Config portal is not active. Continue...");
+      DEBUG_DEBUG("Config portal is not active. Continue...");
+      if (WiFi.status() != WL_CONNECTED) {
+        DEBUG_WARNING("No connection detected... restarting...");
+        restart();
+      }
     }
     wifiPortalStartTime = millis();
   }

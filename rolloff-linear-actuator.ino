@@ -32,7 +32,6 @@
 #include "motor.h"
 #include "utils.h"
 
-const char* VERSION_ID = "V1.5-esp-2ch-wifi-magnet-3";
 //  Maximum length of messages = 63 |                                                             *|
 static const char* ERROR1 = "The controller response message was too long";
 static const char* ERROR2 = "The controller failure message was too long";
